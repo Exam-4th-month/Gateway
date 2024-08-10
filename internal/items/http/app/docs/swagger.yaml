@@ -1,0 +1,405 @@
+basePath: /
+definitions:
+  gateway-service_genproto_auth.CreateAdminRequest:
+    properties:
+      user_id:
+        type: string
+    type: object
+  gateway-service_genproto_auth.DeleteUserRequest:
+    properties:
+      user_id:
+        type: string
+    type: object
+  gateway-service_genproto_auth.LoginRequest:
+    properties:
+      email:
+        type: string
+      password:
+        type: string
+    type: object
+  gateway-service_genproto_auth.LoginResponse:
+    properties:
+      access_token:
+        type: string
+      refresh_token:
+        type: string
+    type: object
+  gateway-service_genproto_auth.LogoutRequest:
+    properties:
+      user_id:
+        type: string
+    type: object
+  gateway-service_genproto_auth.LogoutResponse:
+    properties:
+      message:
+        type: string
+    type: object
+  gateway-service_genproto_auth.RegisterRequest:
+    properties:
+      email:
+        type: string
+      password:
+        type: string
+    type: object
+  gateway-service_genproto_auth.RegisterResponse:
+    properties:
+      user_id:
+        type: string
+    type: object
+  gateway-service_genproto_auth.UpdateUserRequest:
+    properties:
+      email:
+        type: string
+      is_active:
+        type: boolean
+      password:
+        type: string
+      role:
+        type: string
+      user_id:
+        type: string
+    type: object
+  gin.H:
+    additionalProperties: {}
+    type: object
+host: localhost:8080
+info:
+  contact:
+    email: support@swagger.io
+    name: API Support
+    url: http://www.swagger.io/support
+  description: API Endpoints for LocalEats
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  termsOfService: http://swagger.io/terms/
+  title: '# Personal Finance Tracker'
+  version: "1.0"
+paths:
+  /admin/auth/delete/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Soft delete a user by admin
+      parameters:
+      - description: User ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Delete User Request
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/gateway-service_genproto_auth.DeleteUserRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/gin.H'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/gin.H'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/gin.H'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/gin.H'
+      summary: Delete user
+      tags:
+      - Admin Auth
+  /admin/auth/update/{id}:
+    put:
+      consumes:
+      - application/json
+      description: Update a user's information by admin
+      parameters:
+      - description: User ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Update User Request
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/gateway-service_genproto_auth.UpdateUserRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/gin.H'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/gin.H'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/gin.H'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/gin.H'
+      summary: Update user
+      tags:
+      - Admin Auth
+  /auth/admin/login:
+    post:
+      consumes:
+      - application/json
+      description: Log in an admin user with email and password
+      parameters:
+      - description: Login Request
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/gateway-service_genproto_auth.LoginRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/gateway-service_genproto_auth.LoginResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/gin.H'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/gin.H'
+      summary: Admin login
+      tags:
+      - Admin Auth
+  /auth/admin/logout:
+    post:
+      consumes:
+      - application/json
+      description: Log out an admin user by their ID
+      parameters:
+      - description: Logout Request
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/gateway-service_genproto_auth.LogoutRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/gateway-service_genproto_auth.LogoutResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/gin.H'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/gin.H'
+      summary: Admin logout
+      tags:
+      - Admin Auth
+  /auth/superadmin/login:
+    post:
+      consumes:
+      - application/json
+      description: Login as a super admin
+      parameters:
+      - description: Login Request
+        in: body
+        name: loginRequest
+        required: true
+        schema:
+          $ref: '#/definitions/gateway-service_genproto_auth.LoginRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/gateway-service_genproto_auth.LoginResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/gin.H'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/gin.H'
+      summary: Super Admin Login
+      tags:
+      - Super Admin
+  /auth/superadmin/logout:
+    post:
+      consumes:
+      - application/json
+      description: Logout from a super admin session
+      parameters:
+      - description: Logout Request
+        in: body
+        name: logoutRequest
+        required: true
+        schema:
+          $ref: '#/definitions/gateway-service_genproto_auth.LogoutRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/gin.H'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/gin.H'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/gin.H'
+      summary: Super Admin Logout
+      tags:
+      - Super Admin
+  /auth/user/login:
+    post:
+      consumes:
+      - application/json
+      description: Log in a user with email and password
+      parameters:
+      - description: Login Request
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/gateway-service_genproto_auth.LoginRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/gateway-service_genproto_auth.LoginResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/gin.H'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/gin.H'
+      summary: User login
+      tags:
+      - User Auth
+  /auth/user/logout:
+    post:
+      consumes:
+      - application/json
+      description: Log out a user by their ID
+      parameters:
+      - description: Logout Request
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/gateway-service_genproto_auth.LogoutRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/gateway-service_genproto_auth.LogoutResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/gin.H'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/gin.H'
+      summary: User logout
+      tags:
+      - User Auth
+  /auth/user/register:
+    post:
+      consumes:
+      - application/json
+      description: Register a new user with an email and password
+      parameters:
+      - description: Register Request
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/gateway-service_genproto_auth.RegisterRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/gateway-service_genproto_auth.RegisterResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/gin.H'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/gin.H'
+      summary: Register a new user
+      tags:
+      - User Auth
+  /superadmin/createadmin:
+    post:
+      consumes:
+      - application/json
+      description: Create a new admin user by a super admin
+      parameters:
+      - description: Create Admin Request
+        in: body
+        name: createAdminRequest
+        required: true
+        schema:
+          $ref: '#/definitions/gateway-service_genproto_auth.CreateAdminRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/gin.H'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/gin.H'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/gin.H'
+      summary: Create Admin
+      tags:
+      - Super Admin
+schemes:
+- http
+- https
+securityDefinitions:
+  BearerAuth:
+    in: header
+    name: Authorization
+    type: apiKey
+swagger: "2.0"
