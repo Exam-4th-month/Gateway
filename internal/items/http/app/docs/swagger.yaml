@@ -1,5 +1,44 @@
 basePath: /
 definitions:
+  gateway-service_genproto_account.AccountResponse:
+    properties:
+      balance:
+        type: number
+      created_at:
+        type: string
+      currency:
+        type: string
+      id:
+        type: string
+      name:
+        type: string
+      type:
+        type: string
+      updated_at:
+        type: string
+      user_id:
+        type: string
+    type: object
+  gateway-service_genproto_account.AccountsResponse:
+    properties:
+      accounts:
+        items:
+          $ref: '#/definitions/gateway-service_genproto_account.AccountResponse'
+        type: array
+    type: object
+  gateway-service_genproto_account.UpdateAccountRequest:
+    properties:
+      balance:
+        type: number
+      currency:
+        type: string
+      id:
+        type: string
+      name:
+        type: string
+      type:
+        type: string
+    type: object
   gateway-service_genproto_auth.CreateAdminRequest:
     properties:
       user_id:
@@ -57,6 +96,223 @@ definitions:
       role:
         type: string
       user_id:
+        type: string
+    type: object
+  gateway-service_genproto_budget.BudgetResponse:
+    properties:
+      amount:
+        type: number
+      category_id:
+        type: string
+      created_at:
+        type: string
+      end_date:
+        type: string
+      id:
+        type: string
+      period:
+        type: string
+      start_date:
+        type: string
+      updated_at:
+        type: string
+      user_id:
+        type: string
+    type: object
+  gateway-service_genproto_budget.BudgetsResponse:
+    properties:
+      budgets:
+        items:
+          $ref: '#/definitions/gateway-service_genproto_budget.BudgetResponse'
+        type: array
+    type: object
+  gateway-service_genproto_budget.UpdateBudgetRequest:
+    properties:
+      amount:
+        type: number
+      end_date:
+        type: string
+      id:
+        type: string
+      period:
+        type: string
+      start_date:
+        type: string
+    type: object
+  gateway-service_genproto_category.CategoriesResponse:
+    properties:
+      categories:
+        items:
+          $ref: '#/definitions/gateway-service_genproto_category.CategoryResponse'
+        type: array
+    type: object
+  gateway-service_genproto_category.CategoryResponse:
+    properties:
+      created_at:
+        type: string
+      id:
+        type: string
+      name:
+        type: string
+      type:
+        type: string
+      updated_at:
+        type: string
+      user_id:
+        type: string
+    type: object
+  gateway-service_genproto_category.UpdateCategoryRequest:
+    properties:
+      id:
+        type: string
+      name:
+        type: string
+      type:
+        type: string
+    type: object
+  gateway-service_genproto_goal.GoalResponse:
+    properties:
+      created_at:
+        type: string
+      current_amount:
+        type: number
+      deadline:
+        type: string
+      id:
+        type: string
+      name:
+        type: string
+      status:
+        type: string
+      target_amount:
+        type: number
+      updated_at:
+        type: string
+      user_id:
+        type: string
+    type: object
+  gateway-service_genproto_goal.GoalsResponse:
+    properties:
+      goals:
+        items:
+          $ref: '#/definitions/gateway-service_genproto_goal.GoalResponse'
+        type: array
+    type: object
+  gateway-service_genproto_goal.UpdateGoalRequest:
+    properties:
+      current_amount:
+        type: number
+      deadline:
+        type: string
+      id:
+        type: string
+      name:
+        type: string
+      status:
+        type: string
+      target_amount:
+        type: number
+    type: object
+  gateway-service_genproto_transaction.TransactionResponse:
+    properties:
+      account_id:
+        type: string
+      amount:
+        type: number
+      category_id:
+        type: string
+      created_at:
+        type: string
+      date:
+        type: string
+      description:
+        type: string
+      id:
+        type: string
+      type:
+        type: string
+      updated_at:
+        type: string
+      user_id:
+        type: string
+    type: object
+  gateway-service_genproto_transaction.TransactionsResponse:
+    properties:
+      transactions:
+        items:
+          $ref: '#/definitions/gateway-service_genproto_transaction.TransactionResponse'
+        type: array
+    type: object
+  gateway-service_genproto_transaction.UpdateTransactionRequest:
+    properties:
+      amount:
+        type: number
+      date:
+        type: string
+      description:
+        type: string
+      id:
+        type: string
+      type:
+        type: string
+    type: object
+  gateway-service_internal_models.CreateAccountRequest:
+    properties:
+      balance:
+        type: number
+      currency:
+        type: string
+      name:
+        type: string
+      type:
+        type: string
+    type: object
+  gateway-service_internal_models.CreateBudgetRequest:
+    properties:
+      amount:
+        type: number
+      category_id:
+        type: string
+      end_date:
+        type: string
+      period:
+        type: string
+      start_date:
+        type: string
+    type: object
+  gateway-service_internal_models.CreateCategoryRequest:
+    properties:
+      name:
+        type: string
+      type:
+        type: string
+    type: object
+  gateway-service_internal_models.CreateGoalRequest:
+    properties:
+      current_amount:
+        type: number
+      deadline:
+        type: string
+      name:
+        type: string
+      status:
+        type: string
+      target_amount:
+        type: number
+    type: object
+  gateway-service_internal_models.CreateTransactionRequest:
+    properties:
+      account_id:
+        type: string
+      amount:
+        type: number
+      category_id:
+        type: string
+      date:
+        type: string
+      description:
+        type: string
+      type:
         type: string
     type: object
   gin.H:
@@ -394,6 +650,686 @@ paths:
       summary: Create Admin
       tags:
       - Super Admin
+  /user/account:
+    get:
+      description: Get all accounts for the authenticated user
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/gateway-service_genproto_account.AccountsResponse'
+        "401":
+          description: User not authenticated
+          schema:
+            $ref: '#/definitions/gin.H'
+        "500":
+          description: Failed to get accounts
+          schema:
+            $ref: '#/definitions/gin.H'
+      summary: Get accounts
+      tags:
+      - User Accounts
+    post:
+      consumes:
+      - application/json
+      description: Create a new account for the authenticated user
+      parameters:
+      - description: Account details
+        in: body
+        name: CreateAccountRequest
+        required: true
+        schema:
+          $ref: '#/definitions/gateway-service_internal_models.CreateAccountRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/gateway-service_genproto_account.AccountResponse'
+        "400":
+          description: Invalid request body
+          schema:
+            $ref: '#/definitions/gin.H'
+        "401":
+          description: User not authenticated
+          schema:
+            $ref: '#/definitions/gin.H'
+        "500":
+          description: Failed to create account
+          schema:
+            $ref: '#/definitions/gin.H'
+      summary: Create an account
+      tags:
+      - User Accounts
+    put:
+      consumes:
+      - application/json
+      description: Update account details by account ID
+      parameters:
+      - description: Updated account details
+        in: body
+        name: UpdateAccountRequest
+        required: true
+        schema:
+          $ref: '#/definitions/gateway-service_genproto_account.UpdateAccountRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/gateway-service_genproto_account.AccountResponse'
+        "400":
+          description: Invalid request body
+          schema:
+            $ref: '#/definitions/gin.H'
+        "500":
+          description: Failed to update account
+          schema:
+            $ref: '#/definitions/gin.H'
+      summary: Update account
+      tags:
+      - User Accounts
+  /user/account/{id}:
+    delete:
+      description: Delete account by account ID
+      parameters:
+      - description: Account ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 'message: Account deleted successfully'
+          schema:
+            $ref: '#/definitions/gin.H'
+        "400":
+          description: Account ID is required
+          schema:
+            $ref: '#/definitions/gin.H'
+        "500":
+          description: Failed to delete account
+          schema:
+            $ref: '#/definitions/gin.H'
+      summary: Delete account
+      tags:
+      - User Accounts
+    get:
+      description: Get account details by account ID
+      parameters:
+      - description: Account ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/gateway-service_genproto_account.AccountResponse'
+        "400":
+          description: Account ID is required
+          schema:
+            $ref: '#/definitions/gin.H'
+        "500":
+          description: Failed to retrieve account
+          schema:
+            $ref: '#/definitions/gin.H'
+      summary: Get account by ID
+      tags:
+      - User Accounts
+  /user/budget:
+    get:
+      description: Get all budgets for the authenticated user
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/gateway-service_genproto_budget.BudgetsResponse'
+        "401":
+          description: User not authenticated
+          schema:
+            $ref: '#/definitions/gin.H'
+        "500":
+          description: Failed to get budgets
+          schema:
+            $ref: '#/definitions/gin.H'
+      summary: Get budgets
+      tags:
+      - User Budgets
+    post:
+      consumes:
+      - application/json
+      description: Create a new budget for the authenticated user
+      parameters:
+      - description: Budget details
+        in: body
+        name: CreateBudgetRequest
+        required: true
+        schema:
+          $ref: '#/definitions/gateway-service_internal_models.CreateBudgetRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/gateway-service_genproto_budget.BudgetResponse'
+        "400":
+          description: Invalid request body
+          schema:
+            $ref: '#/definitions/gin.H'
+        "401":
+          description: User not authenticated
+          schema:
+            $ref: '#/definitions/gin.H'
+        "500":
+          description: Failed to create budget
+          schema:
+            $ref: '#/definitions/gin.H'
+      summary: Create a budget
+      tags:
+      - User Budgets
+    put:
+      consumes:
+      - application/json
+      description: Update budget details by budget ID
+      parameters:
+      - description: Updated budget details
+        in: body
+        name: UpdateBudgetRequest
+        required: true
+        schema:
+          $ref: '#/definitions/gateway-service_genproto_budget.UpdateBudgetRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/gateway-service_genproto_budget.BudgetResponse'
+        "400":
+          description: Invalid request body
+          schema:
+            $ref: '#/definitions/gin.H'
+        "500":
+          description: Failed to update budget
+          schema:
+            $ref: '#/definitions/gin.H'
+      summary: Update budget
+      tags:
+      - User Budgets
+  /user/budget/{id}:
+    delete:
+      description: Delete budget by budget ID
+      parameters:
+      - description: Budget ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 'message: Budget deleted successfully'
+          schema:
+            $ref: '#/definitions/gin.H'
+        "400":
+          description: Budget ID is required
+          schema:
+            $ref: '#/definitions/gin.H'
+        "500":
+          description: Failed to delete budget
+          schema:
+            $ref: '#/definitions/gin.H'
+      summary: Delete budget
+      tags:
+      - User Budgets
+    get:
+      description: Get budget details by budget ID
+      parameters:
+      - description: Budget ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/gateway-service_genproto_budget.BudgetResponse'
+        "400":
+          description: Budget ID is required
+          schema:
+            $ref: '#/definitions/gin.H'
+        "500":
+          description: Failed to retrieve budget
+          schema:
+            $ref: '#/definitions/gin.H'
+      summary: Get budget by ID
+      tags:
+      - User Budgets
+  /user/category:
+    get:
+      description: Get all categories for the authenticated user
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/gateway-service_genproto_category.CategoriesResponse'
+        "401":
+          description: User not authenticated
+          schema:
+            $ref: '#/definitions/gin.H'
+        "500":
+          description: Failed to get categories
+          schema:
+            $ref: '#/definitions/gin.H'
+      summary: Get categories
+      tags:
+      - User Categories
+    post:
+      consumes:
+      - application/json
+      description: Create a new category for the authenticated user
+      parameters:
+      - description: Category details
+        in: body
+        name: CreateCategoryRequest
+        required: true
+        schema:
+          $ref: '#/definitions/gateway-service_internal_models.CreateCategoryRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/gateway-service_genproto_category.CategoryResponse'
+        "400":
+          description: Invalid request body
+          schema:
+            $ref: '#/definitions/gin.H'
+        "401":
+          description: User not authenticated
+          schema:
+            $ref: '#/definitions/gin.H'
+        "500":
+          description: Failed to create category
+          schema:
+            $ref: '#/definitions/gin.H'
+      summary: Create a category
+      tags:
+      - User Categories
+    put:
+      consumes:
+      - application/json
+      description: Update category details by category ID
+      parameters:
+      - description: Updated category details
+        in: body
+        name: UpdateCategoryRequest
+        required: true
+        schema:
+          $ref: '#/definitions/gateway-service_genproto_category.UpdateCategoryRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/gateway-service_genproto_category.CategoryResponse'
+        "400":
+          description: Invalid request body
+          schema:
+            $ref: '#/definitions/gin.H'
+        "500":
+          description: Failed to update category
+          schema:
+            $ref: '#/definitions/gin.H'
+      summary: Update category
+      tags:
+      - User Categories
+  /user/category/{id}:
+    delete:
+      description: Delete category by category ID
+      parameters:
+      - description: Category ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 'message: Category deleted successfully'
+          schema:
+            $ref: '#/definitions/gin.H'
+        "400":
+          description: Category ID is required
+          schema:
+            $ref: '#/definitions/gin.H'
+        "500":
+          description: Failed to delete category
+          schema:
+            $ref: '#/definitions/gin.H'
+      summary: Delete category
+      tags:
+      - User Categories
+    get:
+      description: Get category details by category ID
+      parameters:
+      - description: Category ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/gateway-service_genproto_category.CategoryResponse'
+        "400":
+          description: Category ID is required
+          schema:
+            $ref: '#/definitions/gin.H'
+        "500":
+          description: Failed to retrieve category
+          schema:
+            $ref: '#/definitions/gin.H'
+      summary: Get category by ID
+      tags:
+      - User Categories
+  /user/goal:
+    get:
+      description: Get all financial goals for the authenticated user
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/gateway-service_genproto_goal.GoalsResponse'
+        "401":
+          description: User not authenticated
+          schema:
+            $ref: '#/definitions/gin.H'
+        "500":
+          description: Failed to get goals
+          schema:
+            $ref: '#/definitions/gin.H'
+      summary: Get goals
+      tags:
+      - User Goals
+    post:
+      consumes:
+      - application/json
+      description: Create a new financial goal for the authenticated user
+      parameters:
+      - description: Goal details
+        in: body
+        name: CreateGoalRequest
+        required: true
+        schema:
+          $ref: '#/definitions/gateway-service_internal_models.CreateGoalRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/gateway-service_genproto_goal.GoalResponse'
+        "400":
+          description: Invalid request body
+          schema:
+            $ref: '#/definitions/gin.H'
+        "401":
+          description: User not authenticated
+          schema:
+            $ref: '#/definitions/gin.H'
+        "500":
+          description: Failed to create goal
+          schema:
+            $ref: '#/definitions/gin.H'
+      summary: Create a goal
+      tags:
+      - User Goals
+    put:
+      consumes:
+      - application/json
+      description: Update financial goal details by goal ID
+      parameters:
+      - description: Updated goal details
+        in: body
+        name: UpdateGoalRequest
+        required: true
+        schema:
+          $ref: '#/definitions/gateway-service_genproto_goal.UpdateGoalRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/gateway-service_genproto_goal.GoalResponse'
+        "400":
+          description: Invalid request body
+          schema:
+            $ref: '#/definitions/gin.H'
+        "500":
+          description: Failed to update goal
+          schema:
+            $ref: '#/definitions/gin.H'
+      summary: Update goal
+      tags:
+      - User Goals
+  /user/goal/{id}:
+    delete:
+      description: Delete financial goal by goal ID
+      parameters:
+      - description: Goal ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 'message: Goal deleted successfully'
+          schema:
+            $ref: '#/definitions/gin.H'
+        "400":
+          description: Goal ID is required
+          schema:
+            $ref: '#/definitions/gin.H'
+        "500":
+          description: Failed to delete goal
+          schema:
+            $ref: '#/definitions/gin.H'
+      summary: Delete goal
+      tags:
+      - User Goals
+    get:
+      description: Get financial goal details by goal ID
+      parameters:
+      - description: Goal ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/gateway-service_genproto_goal.GoalResponse'
+        "400":
+          description: Goal ID is required
+          schema:
+            $ref: '#/definitions/gin.H'
+        "500":
+          description: Failed to get goal
+          schema:
+            $ref: '#/definitions/gin.H'
+      summary: Get goal by ID
+      tags:
+      - User Goals
+  /user/transaction:
+    get:
+      description: Get all financial transactions for the authenticated user
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/gateway-service_genproto_transaction.TransactionsResponse'
+        "401":
+          description: User not authenticated
+          schema:
+            $ref: '#/definitions/gin.H'
+        "500":
+          description: Failed to get transactions
+          schema:
+            $ref: '#/definitions/gin.H'
+      summary: Get transactions
+      tags:
+      - User Transactions
+    post:
+      consumes:
+      - application/json
+      description: Create a new financial transaction for the authenticated user
+      parameters:
+      - description: Transaction details
+        in: body
+        name: CreateTransactionRequest
+        required: true
+        schema:
+          $ref: '#/definitions/gateway-service_internal_models.CreateTransactionRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/gateway-service_genproto_transaction.TransactionResponse'
+        "400":
+          description: Invalid request body
+          schema:
+            $ref: '#/definitions/gin.H'
+        "401":
+          description: User not authenticated
+          schema:
+            $ref: '#/definitions/gin.H'
+        "500":
+          description: Failed to create transaction
+          schema:
+            $ref: '#/definitions/gin.H'
+      summary: Create a transaction
+      tags:
+      - User Transactions
+    put:
+      consumes:
+      - application/json
+      description: Update financial transaction details by transaction ID
+      parameters:
+      - description: Updated transaction details
+        in: body
+        name: UpdateTransactionRequest
+        required: true
+        schema:
+          $ref: '#/definitions/gateway-service_genproto_transaction.UpdateTransactionRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/gateway-service_genproto_transaction.TransactionResponse'
+        "400":
+          description: Invalid request body
+          schema:
+            $ref: '#/definitions/gin.H'
+        "500":
+          description: Failed to update transaction
+          schema:
+            $ref: '#/definitions/gin.H'
+      summary: Update transaction
+      tags:
+      - User Transactions
+  /user/transaction/{id}:
+    delete:
+      description: Delete financial transaction by transaction ID
+      parameters:
+      - description: Transaction ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 'message: Transaction deleted successfully'
+          schema:
+            $ref: '#/definitions/gin.H'
+        "400":
+          description: Invalid transaction ID
+          schema:
+            $ref: '#/definitions/gin.H'
+        "500":
+          description: Failed to delete transaction
+          schema:
+            $ref: '#/definitions/gin.H'
+      summary: Delete transaction
+      tags:
+      - User Transactions
+    get:
+      description: Get financial transaction details by transaction ID
+      parameters:
+      - description: Transaction ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/gateway-service_genproto_transaction.TransactionResponse'
+        "400":
+          description: Invalid transaction ID
+          schema:
+            $ref: '#/definitions/gin.H'
+        "500":
+          description: Failed to get transaction
+          schema:
+            $ref: '#/definitions/gin.H'
+      summary: Get transaction by ID
+      tags:
+      - User Transactions
 schemes:
 - http
 - https

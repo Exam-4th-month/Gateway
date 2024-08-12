@@ -96,5 +96,54 @@ func Run(handler *handler.Handler, logger *slog.Logger, config *config.Config, e
 
 	}
 
+	user := router.Group("user")
+	user.Use(middleware.AuthzMiddleware("/user", enforcer))
+	{
+		account := user.Group("account")
+		{
+			account.POST("/", handler.BudgetingRepo.AccountHandler.CreateAccountHandler)
+			account.GET("/", handler.BudgetingRepo.AccountHandler.GetAccountsHandler)
+			account.GET("/:id", handler.BudgetingRepo.AccountHandler.GetAccountByIdHandler)
+			account.PUT("/", handler.BudgetingRepo.AccountHandler.UpdateAccountHandler)
+			account.DELETE("/:id", handler.BudgetingRepo.AccountHandler.DeleteAccountHandler)
+		}
+
+		budget := user.Group("budget")
+		{
+			budget.POST("/", handler.BudgetingRepo.BudgetHandler.CreateBudgetHandler)
+			budget.GET("/", handler.BudgetingRepo.BudgetHandler.GetBudgetsHandler)
+			budget.GET("/:id", handler.BudgetingRepo.BudgetHandler.GetBudgetByIdHandler)
+			budget.PUT("/", handler.BudgetingRepo.BudgetHandler.UpdateBudgetHandler)
+			budget.DELETE("/:id", handler.BudgetingRepo.BudgetHandler.DeleteBudgetHandler)
+		}
+
+		category := user.Group("category")
+		{
+			category.POST("/", handler.BudgetingRepo.CategoryHandler.CreateCategoryHandler)
+			category.GET("/", handler.BudgetingRepo.CategoryHandler.GetCategoriesHandler)
+			category.GET("/:id", handler.BudgetingRepo.CategoryHandler.GetCategoryByIdHandler)
+			category.PUT("/", handler.BudgetingRepo.CategoryHandler.UpdateCategoryHandler)
+			category.DELETE("/:id", handler.BudgetingRepo.CategoryHandler.DeleteCategoryHandler)
+		}
+
+		goal := user.Group("goal")
+		{
+			goal.POST("/", handler.BudgetingRepo.GoalHandler.CreateGoalHandler)
+			goal.GET("/", handler.BudgetingRepo.GoalHandler.GetGoalsHandler)
+			goal.GET("/:id", handler.BudgetingRepo.GoalHandler.GetGoalByIdHandler)
+			goal.PUT("/", handler.BudgetingRepo.GoalHandler.UpdateGoalHandler)
+			goal.DELETE("/:id", handler.BudgetingRepo.GoalHandler.DeleteGoalHandler)
+		}
+
+		transaction := user.Group("transaction")
+		{
+			transaction.POST("/", handler.BudgetingRepo.TransactionHandler.CreateTransactionHandler)
+			transaction.GET("/", handler.BudgetingRepo.TransactionHandler.GetTransactionsHandler)
+			transaction.GET("/:id", handler.BudgetingRepo.TransactionHandler.GetTransactionByIdHandler)
+			transaction.PUT("/", handler.BudgetingRepo.TransactionHandler.UpdateTransactionHandler)
+			transaction.DELETE("/:id", handler.BudgetingRepo.TransactionHandler.DeleteTransactionHandler)
+		}
+	}
+
 	return router.Run(config.Server.ServerPort)
 }
