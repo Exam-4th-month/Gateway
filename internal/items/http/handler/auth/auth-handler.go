@@ -1,32 +1,38 @@
 package auth
 
 import (
-	"encoding/json"
+	"log"
 	"log/slog"
 
 	pb "gateway-service/genproto/auth"
-	"gateway-service/internal/items/msgbroker/auth"
+	"gateway-service/internal/items/config"
 	"gateway-service/internal/items/redisservice"
 
 	"github.com/gin-gonic/gin"
+	"google.golang.org/grpc"
+	"google.golang.org/grpc/credentials/insecure"
 )
 
-type (
-	AuthHandler struct {
-		auth      pb.AuthServiceClient
-		logger    *slog.Logger
-		redis     *redisservice.RedisService
-		msgbroker *auth.AuthMsgBroker
-	}
-)
+type AuthHandler struct {
+	auth   pb.AuthServiceClient
+	logger *slog.Logger
+	redis  *redisservice.RedisService
+}
 
-func NewAthleteHandler(logger *slog.Logger, auth pb.AuthServiceClient, redis *redisservice.RedisService, msgbroker *auth.AuthMsgBroker) *AuthHandler {
+func NewAuthHandler(logger *slog.Logger, redis *redisservice.RedisService, config *config.Config) *AuthHandler {
 	return &AuthHandler{
-		auth:      auth,
-		logger:    logger,
-		redis:     redis,
-		msgbroker: msgbroker,
+		auth:   pb.NewAuthServiceClient(connect(config.Server.AuthPort)),
+		logger: logger,
+		redis:  redis,
 	}
+}
+
+func connect(port string) *grpc.ClientConn {
+	conn, err := grpc.NewClient(port, grpc.WithTransportCredentials(insecure.NewCredentials()))
+	if err != nil {
+		log.Fatal(err)
+	}
+	return conn
 }
 
 // RegisterHandler godoc
@@ -48,18 +54,7 @@ func (h *AuthHandler) RegisterHandler(c *gin.Context) {
 		return
 	}
 
-	body, err := json.Marshal(&req)
-	if err != nil {
-		c.IndentedJSON(500, gin.H{"error": err.Error()})
-		return
-	}
-
-	if err := h.msgbroker.Register(body); err != nil {
-		c.IndentedJSON(500, gin.H{"error": err.Error()})
-		return
-	}
-
-	resp, err := h.auth.GetUserByEmail(c.Request.Context(), &pb.GetUserByEmailRequest{Email: req.Email})
+	resp, err := h.auth.Register(c.Request.Context(), &req)
 	if err != nil {
 		c.IndentedJSON(500, gin.H{"error": err.Error()})
 		return
@@ -201,13 +196,8 @@ func (h *AuthHandler) UpdateUserHandler(c *gin.Context) {
 		return
 	}
 
-	body, err := json.Marshal(&req)
+	_, err := h.auth.UpdateUser(c.Request.Context(), &req)
 	if err != nil {
-		c.IndentedJSON(500, gin.H{"error": err.Error()})
-		return
-	}
-
-	if err := h.msgbroker.UpdateUser(body); err != nil {
 		c.IndentedJSON(500, gin.H{"error": err.Error()})
 		return
 	}
@@ -236,13 +226,8 @@ func (h *AuthHandler) DeleteUserHandler(c *gin.Context) {
 		return
 	}
 
-	body, err := json.Marshal(&req)
+	_, err := h.auth.DeleteUser(c.Request.Context(), &req)
 	if err != nil {
-		c.IndentedJSON(500, gin.H{"error": err.Error()})
-		return
-	}
-
-	if err := h.msgbroker.DeleteUser(body); err != nil {
 		c.IndentedJSON(500, gin.H{"error": err.Error()})
 		return
 	}
@@ -322,13 +307,8 @@ func (h *AuthHandler) SuperAdminCreateAdminHandler(c *gin.Context) {
 		return
 	}
 
-	body, err := json.Marshal(&req)
+	_, err := h.auth.CreateAdmin(c.Request.Context(), &req)
 	if err != nil {
-		c.IndentedJSON(500, gin.H{"error": err.Error()})
-		return
-	}
-
-	if err := h.msgbroker.CreateAdmin(body); err != nil {
 		c.IndentedJSON(500, gin.H{"error": err.Error()})
 		return
 	}

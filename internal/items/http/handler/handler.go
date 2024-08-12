@@ -1,39 +1,29 @@
 package handler
 
 import (
-	"log"
 	"log/slog"
 
-	auth_pb "gateway-service/genproto/auth"
 	"gateway-service/internal/items/config"
-	auth_broker "gateway-service/internal/items/msgbroker/auth"
 
 	"gateway-service/internal/items/http/handler/auth"
-	"gateway-service/internal/items/redisservice"
+	"gateway-service/internal/items/http/handler/budgeting"
+	msgbroker "gateway-service/internal/items/msgbroker"
 
 	amqp "github.com/rabbitmq/amqp091-go"
-	"google.golang.org/grpc"
-	"google.golang.org/grpc/credentials/insecure"
+
+	"gateway-service/internal/items/redisservice"
 )
 
-type (
-	Handler struct {
-		AuthRepo *auth.AuthHandler
-	}
-)
-
-func connect(port string) *grpc.ClientConn {
-	conn, err := grpc.NewClient(port, grpc.WithTransportCredentials(insecure.NewCredentials()))
-	if err != nil {
-		log.Fatal(err)
-	}
-	return conn
+type Handler struct {
+	AuthRepo      *auth.AuthHandler
+	BudgetingRepo *budgeting.BudgetingHandler
 }
 
 func New(redis *redisservice.RedisService, logger *slog.Logger, config *config.Config, channel *amqp.Channel) *Handler {
-	authClient := auth.NewAthleteHandler(logger, auth_pb.NewAuthServiceClient(connect(config.Server.AuthPort)), redis, auth_broker.NewAthleteMsgBroker(channel, logger))
+	msgbroker := msgbroker.NewMsgBroker(channel, logger)
 
 	return &Handler{
-		AuthRepo: authClient,
+		AuthRepo:      auth.NewAuthHandler(logger, redis, config),
+		BudgetingRepo: budgeting.NewBudgetingHandler(logger, msgbroker, config),
 	}
 }
