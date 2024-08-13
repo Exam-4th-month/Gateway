@@ -213,6 +213,44 @@ definitions:
       target_amount:
         type: number
     type: object
+  gateway-service_genproto_notification.NotificationResponse:
+    properties:
+      created_at:
+        type: string
+      id:
+        type: string
+      is_read:
+        type: boolean
+      message:
+        type: string
+      user_id:
+        type: string
+    type: object
+  gateway-service_genproto_notification.NotificationsResponse:
+    properties:
+      notifications:
+        items:
+          $ref: '#/definitions/gateway-service_genproto_notification.NotificationResponse'
+        type: array
+    type: object
+  gateway-service_genproto_report.IncomeReportResponse:
+    properties:
+      category_income:
+        additionalProperties:
+          type: number
+        type: object
+      total_income:
+        type: number
+    type: object
+  gateway-service_genproto_report.SpendingReportResponse:
+    properties:
+      category_spending:
+        additionalProperties:
+          type: number
+        type: object
+      total_spending:
+        type: number
+    type: object
   gateway-service_genproto_transaction.TransactionResponse:
     properties:
       account_id:
@@ -315,6 +353,20 @@ definitions:
       type:
         type: string
     type: object
+  gateway-service_internal_models.GetIncomeReportRequest:
+    properties:
+      end_date:
+        type: string
+      start_date:
+        type: string
+    type: object
+  gateway-service_internal_models.GetSpendingReportRequest:
+    properties:
+      end_date:
+        type: string
+      start_date:
+        type: string
+    type: object
   gin.H:
     additionalProperties: {}
     type: object
@@ -332,7 +384,7 @@ info:
   title: '# Personal Finance Tracker'
   version: "1.0"
 paths:
-  /admin/auth/delete/{id}:
+  /admin/delete/{id}:
     delete:
       consumes:
       - application/json
@@ -371,7 +423,7 @@ paths:
       summary: Delete user
       tags:
       - Admin Auth
-  /admin/auth/update/{id}:
+  /admin/update/{id}:
     put:
       consumes:
       - application/json
@@ -668,6 +720,8 @@ paths:
           description: Failed to get accounts
           schema:
             $ref: '#/definitions/gin.H'
+      security:
+      - BearerAuth: []
       summary: Get accounts
       tags:
       - User Accounts
@@ -701,6 +755,8 @@ paths:
           description: Failed to create account
           schema:
             $ref: '#/definitions/gin.H'
+      security:
+      - BearerAuth: []
       summary: Create an account
       tags:
       - User Accounts
@@ -730,6 +786,8 @@ paths:
           description: Failed to update account
           schema:
             $ref: '#/definitions/gin.H'
+      security:
+      - BearerAuth: []
       summary: Update account
       tags:
       - User Accounts
@@ -757,6 +815,8 @@ paths:
           description: Failed to delete account
           schema:
             $ref: '#/definitions/gin.H'
+      security:
+      - BearerAuth: []
       summary: Delete account
       tags:
       - User Accounts
@@ -783,6 +843,8 @@ paths:
           description: Failed to retrieve account
           schema:
             $ref: '#/definitions/gin.H'
+      security:
+      - BearerAuth: []
       summary: Get account by ID
       tags:
       - User Accounts
@@ -804,6 +866,8 @@ paths:
           description: Failed to get budgets
           schema:
             $ref: '#/definitions/gin.H'
+      security:
+      - BearerAuth: []
       summary: Get budgets
       tags:
       - User Budgets
@@ -837,6 +901,8 @@ paths:
           description: Failed to create budget
           schema:
             $ref: '#/definitions/gin.H'
+      security:
+      - BearerAuth: []
       summary: Create a budget
       tags:
       - User Budgets
@@ -857,7 +923,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/gateway-service_genproto_budget.BudgetResponse'
+            $ref: '#/definitions/gin.H'
         "400":
           description: Invalid request body
           schema:
@@ -866,6 +932,8 @@ paths:
           description: Failed to update budget
           schema:
             $ref: '#/definitions/gin.H'
+      security:
+      - BearerAuth: []
       summary: Update budget
       tags:
       - User Budgets
@@ -893,6 +961,8 @@ paths:
           description: Failed to delete budget
           schema:
             $ref: '#/definitions/gin.H'
+      security:
+      - BearerAuth: []
       summary: Delete budget
       tags:
       - User Budgets
@@ -919,6 +989,8 @@ paths:
           description: Failed to retrieve budget
           schema:
             $ref: '#/definitions/gin.H'
+      security:
+      - BearerAuth: []
       summary: Get budget by ID
       tags:
       - User Budgets
@@ -940,6 +1012,8 @@ paths:
           description: Failed to get categories
           schema:
             $ref: '#/definitions/gin.H'
+      security:
+      - BearerAuth: []
       summary: Get categories
       tags:
       - User Categories
@@ -973,6 +1047,8 @@ paths:
           description: Failed to create category
           schema:
             $ref: '#/definitions/gin.H'
+      security:
+      - BearerAuth: []
       summary: Create a category
       tags:
       - User Categories
@@ -1002,6 +1078,8 @@ paths:
           description: Failed to update category
           schema:
             $ref: '#/definitions/gin.H'
+      security:
+      - BearerAuth: []
       summary: Update category
       tags:
       - User Categories
@@ -1029,6 +1107,8 @@ paths:
           description: Failed to delete category
           schema:
             $ref: '#/definitions/gin.H'
+      security:
+      - BearerAuth: []
       summary: Delete category
       tags:
       - User Categories
@@ -1055,6 +1135,8 @@ paths:
           description: Failed to retrieve category
           schema:
             $ref: '#/definitions/gin.H'
+      security:
+      - BearerAuth: []
       summary: Get category by ID
       tags:
       - User Categories
@@ -1076,6 +1158,8 @@ paths:
           description: Failed to get goals
           schema:
             $ref: '#/definitions/gin.H'
+      security:
+      - BearerAuth: []
       summary: Get goals
       tags:
       - User Goals
@@ -1109,6 +1193,8 @@ paths:
           description: Failed to create goal
           schema:
             $ref: '#/definitions/gin.H'
+      security:
+      - BearerAuth: []
       summary: Create a goal
       tags:
       - User Goals
@@ -1129,7 +1215,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/gateway-service_genproto_goal.GoalResponse'
+            $ref: '#/definitions/gin.H'
         "400":
           description: Invalid request body
           schema:
@@ -1138,6 +1224,8 @@ paths:
           description: Failed to update goal
           schema:
             $ref: '#/definitions/gin.H'
+      security:
+      - BearerAuth: []
       summary: Update goal
       tags:
       - User Goals
@@ -1165,6 +1253,8 @@ paths:
           description: Failed to delete goal
           schema:
             $ref: '#/definitions/gin.H'
+      security:
+      - BearerAuth: []
       summary: Delete goal
       tags:
       - User Goals
@@ -1191,9 +1281,129 @@ paths:
           description: Failed to get goal
           schema:
             $ref: '#/definitions/gin.H'
+      security:
+      - BearerAuth: []
       summary: Get goal by ID
       tags:
       - User Goals
+  /user/notification/:
+    get:
+      consumes:
+      - application/json
+      description: Retrieve all notifications for the authenticated user
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/gateway-service_genproto_notification.NotificationsResponse'
+        "401":
+          description: User not authenticated
+          schema:
+            $ref: '#/definitions/gin.H'
+        "500":
+          description: Failed to retrieve notifications
+          schema:
+            $ref: '#/definitions/gin.H'
+      security:
+      - BearerAuth: []
+      summary: Get user notifications
+      tags:
+      - User Notifications
+  /user/notification/{id}:
+    put:
+      consumes:
+      - application/json
+      description: Mark the specified notification as read
+      parameters:
+      - description: Notification ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/gin.H'
+        "400":
+          description: Notification ID is required
+          schema:
+            $ref: '#/definitions/gin.H'
+        "500":
+          description: Failed to mark notification as read
+          schema:
+            $ref: '#/definitions/gin.H'
+      security:
+      - BearerAuth: []
+      summary: Mark a notification as read
+      tags:
+      - User Notifications
+  /user/report/incoming:
+    get:
+      description: Retrieve an income report for a user between the specified start
+        and end dates
+      parameters:
+      - description: Get Income Report Request
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/gateway-service_internal_models.GetIncomeReportRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/gateway-service_genproto_report.IncomeReportResponse'
+        "400":
+          description: Invalid request payload
+          schema:
+            $ref: '#/definitions/gin.H'
+        "500":
+          description: Failed to retrieve income report
+          schema:
+            $ref: '#/definitions/gin.H'
+      security:
+      - BearerAuth: []
+      summary: Get income report
+      tags:
+      - User Reports
+  /user/report/spending:
+    get:
+      description: Retrieve a spending report for a user between the specified start
+        and end dates
+      parameters:
+      - description: Get Spending Report Request
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/gateway-service_internal_models.GetSpendingReportRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/gateway-service_genproto_report.SpendingReportResponse'
+        "400":
+          description: Invalid request payload
+          schema:
+            $ref: '#/definitions/gin.H'
+        "500":
+          description: Failed to retrieve spending report
+          schema:
+            $ref: '#/definitions/gin.H'
+      security:
+      - BearerAuth: []
+      summary: Get spending report
+      tags:
+      - User Reports
   /user/transaction:
     get:
       description: Get all financial transactions for the authenticated user
@@ -1212,6 +1422,8 @@ paths:
           description: Failed to get transactions
           schema:
             $ref: '#/definitions/gin.H'
+      security:
+      - BearerAuth: []
       summary: Get transactions
       tags:
       - User Transactions
@@ -1232,7 +1444,7 @@ paths:
         "201":
           description: Created
           schema:
-            $ref: '#/definitions/gateway-service_genproto_transaction.TransactionResponse'
+            $ref: '#/definitions/gin.H'
         "400":
           description: Invalid request body
           schema:
@@ -1245,6 +1457,8 @@ paths:
           description: Failed to create transaction
           schema:
             $ref: '#/definitions/gin.H'
+      security:
+      - BearerAuth: []
       summary: Create a transaction
       tags:
       - User Transactions
@@ -1274,6 +1488,8 @@ paths:
           description: Failed to update transaction
           schema:
             $ref: '#/definitions/gin.H'
+      security:
+      - BearerAuth: []
       summary: Update transaction
       tags:
       - User Transactions
@@ -1301,6 +1517,8 @@ paths:
           description: Failed to delete transaction
           schema:
             $ref: '#/definitions/gin.H'
+      security:
+      - BearerAuth: []
       summary: Delete transaction
       tags:
       - User Transactions
@@ -1327,6 +1545,8 @@ paths:
           description: Failed to get transaction
           schema:
             $ref: '#/definitions/gin.H'
+      security:
+      - BearerAuth: []
       summary: Get transaction by ID
       tags:
       - User Transactions

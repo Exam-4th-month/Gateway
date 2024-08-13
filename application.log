@@ -1,0 +1,35 @@
+{"time":"2024-08-12T14:22:54.775807134+05:00","level":"INFO","msg":"LoginHandler called"}
+{"time":"2024-08-12T14:26:53.248955741+05:00","level":"INFO","msg":"LoginHandler called"}
+{"time":"2024-08-12T14:34:58.0613497+05:00","level":"INFO","msg":"LoginHandler called"}
+{"time":"2024-08-12T14:38:18.437729714+05:00","level":"INFO","msg":"LoginHandler called"}
+{"time":"2024-08-12T14:44:05.287135032+05:00","level":"INFO","msg":"LoginHandler called"}
+{"time":"2024-08-12T14:46:54.937097668+05:00","level":"INFO","msg":"LoginHandler called"}
+{"time":"2024-08-12T14:48:49.33201991+05:00","level":"INFO","msg":"LoginHandler called"}
+{"time":"2024-08-12T14:54:16.614854537+05:00","level":"INFO","msg":"LoginHandler called"}
+{"time":"2024-08-12T14:54:30.859575902+05:00","level":"INFO","msg":"LoginHandler called"}
+{"time":"2024-08-12T14:56:32.405285107+05:00","level":"INFO","msg":"LoginHandler called"}
+{"time":"2024-08-12T15:22:48.582783043+05:00","level":"INFO","msg":"CreateAccountHandler"}
+{"time":"2024-08-12T15:28:30.908276875+05:00","level":"INFO","msg":"LoginHandler called"}
+{"time":"2024-08-12T15:37:36.19561135+05:00","level":"INFO","msg":"LoginHandler called"}
+{"time":"2024-08-12T15:51:02.713270027+05:00","level":"INFO","msg":"LoginHandler called"}
+{"time":"2024-08-12T16:56:44.018154183+05:00","level":"INFO","msg":"LoginHandler called"}
+{"time":"2024-08-13T13:20:43.542237251+05:00","level":"INFO","msg":"LoginHandler called"}
+{"time":"2024-08-13T13:22:10.792630551+05:00","level":"INFO","msg":"CreateAccountHandler"}
+{"time":"2024-08-13T13:22:28.574190035+05:00","level":"INFO","msg":"LoginHandler called"}
+{"time":"2024-08-13T13:22:57.625219243+05:00","level":"INFO","msg":"CreateAccountHandler"}
+{"time":"2024-08-13T13:40:47.995311091+05:00","level":"INFO","msg":"CreateAccountHandler"}
+{"time":"2024-08-13T13:43:32.886713525+05:00","level":"INFO","msg":"CreateAccountHandler"}
+{"time":"2024-08-13T13:48:18.808688723+05:00","level":"INFO","msg":"CreateTransactionHandler"}
+{"time":"2024-08-13T13:48:18.809043282+05:00","level":"INFO","msg":"Message published","queue":"transaction_created"}
+{"time":"2024-08-13T13:49:35.170667991+05:00","level":"INFO","msg":"CreateTransactionHandler"}
+{"time":"2024-08-13T13:49:35.170873657+05:00","level":"INFO","msg":"Message published","queue":"transaction_created"}
+{"time":"2024-08-13T13:50:44.73725223+05:00","level":"INFO","msg":"CreateTransactionHandler"}
+{"time":"2024-08-13T13:50:44.737461565+05:00","level":"INFO","msg":"Message published","queue":"transaction_created"}
+{"time":"2024-08-13T13:51:35.300761615+05:00","level":"INFO","msg":"CreateTransactionHandler"}
+{"time":"2024-08-13T13:51:35.301115689+05:00","level":"INFO","msg":"Message published","queue":"transaction_created"}
+{"time":"2024-08-13T13:52:33.079083453+05:00","level":"INFO","msg":"CreateTransactionHandler"}
+{"time":"2024-08-13T13:52:33.079923823+05:00","level":"INFO","msg":"Message published","queue":"transaction_created"}
+{"time":"2024-08-13T13:53:35.267052347+05:00","level":"INFO","msg":"CreateTransactionHandler"}
+{"time":"2024-08-13T13:53:35.267434124+05:00","level":"INFO","msg":"Message published","queue":"transaction_created"}
+{"time":"2024-08-13T13:55:24.842862236+05:00","level":"INFO","msg":"CreateTransactionHandler"}
+{"time":"2024-08-13T13:55:24.843285287+05:00","level":"INFO","msg":"Message published","queue":"transaction_created"}

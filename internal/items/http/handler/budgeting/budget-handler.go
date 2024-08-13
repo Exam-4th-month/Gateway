@@ -2,29 +2,35 @@ package budgeting
 
 import (
 	pb "gateway-service/genproto/budget"
+	"gateway-service/internal/items/config"
+	"gateway-service/internal/items/middleware"
 	"gateway-service/internal/items/msgbroker"
 	"gateway-service/internal/models"
 	"log/slog"
 
 	"github.com/gin-gonic/gin"
+	"google.golang.org/protobuf/encoding/protojson"
 )
 
 type BudgetHandler struct {
 	budget    pb.BudgetServiceClient
 	logger    *slog.Logger
 	msgbroker *msgbroker.MsgBroker
+	config    *config.Config
 }
 
-func NewBudgetHandler(budget pb.BudgetServiceClient, logger *slog.Logger, msgbroker *msgbroker.MsgBroker) *BudgetHandler {
+func NewBudgetHandler(budget pb.BudgetServiceClient, logger *slog.Logger, msgbroker *msgbroker.MsgBroker, config *config.Config) *BudgetHandler {
 	return &BudgetHandler{
 		budget:    budget,
 		logger:    logger,
 		msgbroker: msgbroker,
+		config:    config,
 	}
 }
 
 // CreateBudgetHandler godoc
 // @Summary      Create a budget
+// @Security     BearerAuth
 // @Description  Create a new budget for the authenticated user
 // @Tags         User Budgets
 // @Accept       json
@@ -38,17 +44,12 @@ func NewBudgetHandler(budget pb.BudgetServiceClient, logger *slog.Logger, msgbro
 func (h *BudgetHandler) CreateBudgetHandler(c *gin.Context) {
 	h.logger.Info("CreateBudgetHandler")
 
-	UserID, exists := c.Get("user_id")
-	if !exists {
+	userId := middleware.GetUser_id(c, h.config)
+	if userId == "" {
 		c.IndentedJSON(401, gin.H{"error": "User not authenticated"})
 		return
 	}
 
-	userIDStr, ok := UserID.(string)
-	if !ok {
-		c.IndentedJSON(500, gin.H{"error": "Invalid user ID format"})
-		return
-	}
 	var req models.CreateBudgetRequest
 	if err := c.ShouldBindJSON(&req); err != nil {
 		c.IndentedJSON(400, gin.H{"error": "Invalid request body"})
@@ -56,7 +57,7 @@ func (h *BudgetHandler) CreateBudgetHandler(c *gin.Context) {
 	}
 
 	resp, err := h.budget.CreateBudget(c.Request.Context(), &pb.CreateBudgetRequest{
-		UserId:     userIDStr,
+		UserId:     userId,
 		CategoryId: req.CategoryID,
 		Amount:     req.Amount,
 		Period:     req.Period,
@@ -73,6 +74,7 @@ func (h *BudgetHandler) CreateBudgetHandler(c *gin.Context) {
 
 // GetBudgetsHandler godoc
 // @Summary      Get budgets
+// @Security     BearerAuth
 // @Description  Get all budgets for the authenticated user
 // @Tags         User Budgets
 // @Produce      json
@@ -83,20 +85,14 @@ func (h *BudgetHandler) CreateBudgetHandler(c *gin.Context) {
 func (h *BudgetHandler) GetBudgetsHandler(c *gin.Context) {
 	h.logger.Info("GetBudgetsHandler")
 
-	UserID, exists := c.Get("user_id")
-	if !exists {
+	userId := middleware.GetUser_id(c, h.config)
+	if userId == "" {
 		c.IndentedJSON(401, gin.H{"error": "User not authenticated"})
 		return
 	}
 
-	userIDStr, ok := UserID.(string)
-	if !ok {
-		c.IndentedJSON(500, gin.H{"error": "Invalid user ID format"})
-		return
-	}
-
 	resp, err := h.budget.GetBudgets(c.Request.Context(), &pb.GetBudgetsRequest{
-		UserId: userIDStr,
+		UserId: userId,
 	})
 	if err != nil {
 		c.IndentedJSON(500, gin.H{"error": "Failed to get budgets"})
@@ -108,6 +104,7 @@ func (h *BudgetHandler) GetBudgetsHandler(c *gin.Context) {
 
 // GetBudgetByIdHandler godoc
 // @Summary      Get budget by ID
+// @Security     BearerAuth
 // @Description  Get budget details by budget ID
 // @Tags         User Budgets
 // @Produce      json
@@ -138,12 +135,13 @@ func (h *BudgetHandler) GetBudgetByIdHandler(c *gin.Context) {
 
 // UpdateBudgetHandler godoc
 // @Summary      Update budget
+// @Security     BearerAuth
 // @Description  Update budget details by budget ID
 // @Tags         User Budgets
 // @Accept       json
 // @Produce      json
 // @Param        UpdateBudgetRequest  body      pb.UpdateBudgetRequest  true  "Updated budget details"
-// @Success      200                   {object}  pb.BudgetResponse
+// @Success      200                   {object}  gin.H
 // @Failure      400                   {object}  gin.H "Invalid request body"
 // @Failure      500                   {object}  gin.H "Failed to update budget"
 // @Router       /user/budget [put]
@@ -156,17 +154,23 @@ func (h *BudgetHandler) UpdateBudgetHandler(c *gin.Context) {
 		return
 	}
 
-	resp, err := h.budget.UpdateBudget(c.Request.Context(), &req)
+	body, err := protojson.Marshal(&req)
 	if err != nil {
-		c.IndentedJSON(500, gin.H{"error": "Failed to update budget"})
+		c.IndentedJSON(400, gin.H{"error": "Error while marshaling request"})
 		return
 	}
 
-	c.IndentedJSON(200, resp)
+	err = h.msgbroker.BudgetUpdated(body)
+	if err != nil {
+		c.IndentedJSON(400, gin.H{"error": "Error while updating budjet"})
+	}
+
+	c.IndentedJSON(200, gin.H{"message": "Budget updated successfully!"})
 }
 
 // DeleteBudgetHandler godoc
 // @Summary      Delete budget
+// @Security     BearerAuth
 // @Description  Delete budget by budget ID
 // @Tags         User Budgets
 // @Produce      json

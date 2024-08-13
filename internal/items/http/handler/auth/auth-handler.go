@@ -187,7 +187,7 @@ func (h *AuthHandler) AdminLogoutHandler(c *gin.Context) {
 // @Failure 400 {object} gin.H
 // @Failure 403 {object} gin.H
 // @Failure 500 {object} gin.H
-// @Router /admin/auth/update/{id} [put]
+// @Router /admin/update/{id} [put]
 func (h *AuthHandler) UpdateUserHandler(c *gin.Context) {
 	h.logger.Info("UpdateUserHandler called")
 	var req pb.UpdateUserRequest
@@ -217,7 +217,7 @@ func (h *AuthHandler) UpdateUserHandler(c *gin.Context) {
 // @Failure 400 {object} gin.H
 // @Failure 403 {object} gin.H
 // @Failure 500 {object} gin.H
-// @Router /admin/auth/delete/{id} [delete]
+// @Router /admin/delete/{id} [delete]
 func (h *AuthHandler) DeleteUserHandler(c *gin.Context) {
 	h.logger.Info("DeleteUserHandler called")
 	var req pb.DeleteUserRequest

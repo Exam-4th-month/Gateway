@@ -53,13 +53,13 @@ func NewBudgetingHandler(logger *slog.Logger, msgbroker *msgbroker.MsgBroker, co
 	clientConn := NewBudgetClientConn(config)
 
 	return &BudgetingHandler{
-		AccountHandler:      NewAccountHandler(clientConn.AccountClient, logger, msgbroker),
-		BudgetHandler:       NewBudgetHandler(clientConn.BudgetClient, logger, msgbroker),
-		CategoryHandler:     NewCategoryHandler(clientConn.CategoryClient, logger, msgbroker),
-		GoalHandler:         NewGoalHandler(clientConn.GoalClient, logger, msgbroker),
-		NotificationHandler: NewNotificationHandler(clientConn.NotificationClient, logger, msgbroker),
-		ReportHandler:       NewReportHandler(clientConn.ReportClient, logger, msgbroker),
-		TransactionHandler:  NewTransactionHandler(clientConn.TransactionClient, logger, msgbroker),
+		AccountHandler:      NewAccountHandler(clientConn.AccountClient, logger, msgbroker, config),
+		BudgetHandler:       NewBudgetHandler(clientConn.BudgetClient, logger, msgbroker, config),
+		CategoryHandler:     NewCategoryHandler(clientConn.CategoryClient, logger, msgbroker, config),
+		GoalHandler:         NewGoalHandler(clientConn.GoalClient, logger, msgbroker, config),
+		NotificationHandler: NewNotificationHandler(clientConn.NotificationClient, logger, msgbroker, config),
+		ReportHandler:       NewReportHandler(clientConn.ReportClient, logger, msgbroker, config),
+		TransactionHandler:  NewTransactionHandler(clientConn.TransactionClient, logger, msgbroker, config),
 	}
 }
 

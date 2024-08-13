@@ -2,35 +2,41 @@ package budgeting
 
 import (
 	pb "gateway-service/genproto/transaction"
+	"gateway-service/internal/items/config"
+	"gateway-service/internal/items/middleware"
 	"gateway-service/internal/items/msgbroker"
 	"gateway-service/internal/models"
 	"log/slog"
 
 	"github.com/gin-gonic/gin"
+	"google.golang.org/protobuf/encoding/protojson"
 )
 
 type TransactionHandler struct {
 	transaction pb.TransactionServiceClient
 	logger      *slog.Logger
 	msgbroker   *msgbroker.MsgBroker
+	config      *config.Config
 }
 
-func NewTransactionHandler(transaction pb.TransactionServiceClient, logger *slog.Logger, msgbroker *msgbroker.MsgBroker) *TransactionHandler {
+func NewTransactionHandler(transaction pb.TransactionServiceClient, logger *slog.Logger, msgbroker *msgbroker.MsgBroker, config *config.Config) *TransactionHandler {
 	return &TransactionHandler{
 		transaction: transaction,
 		logger:      logger,
 		msgbroker:   msgbroker,
+		config:      config,
 	}
 }
 
 // CreateTransactionHandler godoc
 // @Summary      Create a transaction
+// @Security     BearerAuth
 // @Description  Create a new financial transaction for the authenticated user
 // @Tags         User Transactions
 // @Accept       json
 // @Produce      json
 // @Param        CreateTransactionRequest  body      models.CreateTransactionRequest  true  "Transaction details"
-// @Success      201                       {object}  pb.TransactionResponse
+// @Success      201                       {object}  gin.H
 // @Failure      401                       {object}  gin.H "User not authenticated"
 // @Failure      400                       {object}  gin.H "Invalid request body"
 // @Failure      500                       {object}  gin.H "Failed to create transaction"
@@ -38,15 +44,9 @@ func NewTransactionHandler(transaction pb.TransactionServiceClient, logger *slog
 func (h *TransactionHandler) CreateTransactionHandler(c *gin.Context) {
 	h.logger.Info("CreateTransactionHandler")
 
-	UserID, exists := c.Get("user_id")
-	if !exists {
+	userId := middleware.GetUser_id(c, h.config)
+	if userId == "" {
 		c.IndentedJSON(401, gin.H{"error": "User not authenticated"})
-		return
-	}
-
-	userIDStr, ok := UserID.(string)
-	if !ok {
-		c.IndentedJSON(500, gin.H{"error": "Invalid user ID format"})
 		return
 	}
 
@@ -56,25 +56,33 @@ func (h *TransactionHandler) CreateTransactionHandler(c *gin.Context) {
 		return
 	}
 
-	resp, err := h.transaction.CreateTransaction(c.Request.Context(), &pb.CreateTransactionRequest{
-		UserId:      userIDStr,
+	var request = pb.CreateTransactionRequest{
+		UserId:      userId,
 		AccountId:   req.AccountID,
 		CategoryId:  req.CategoryID,
 		Amount:      req.Amount,
 		Type:        req.Type,
 		Description: req.Description,
 		Date:        req.Date,
-	})
+	}
+
+	body, err := protojson.Marshal(&request)
 	if err != nil {
-		c.IndentedJSON(500, gin.H{"error": "Failed to create transaction"})
+		c.IndentedJSON(400, gin.H{"error": "Error while marshaling request"})
 		return
 	}
 
-	c.IndentedJSON(201, resp)
+	err = h.msgbroker.TransactionCreated(body)
+	if err != nil {
+		c.IndentedJSON(400, gin.H{"error": "Error while creating transaction"})
+	}
+
+	c.IndentedJSON(201, gin.H{"message": "Transaction created successfully!"})
 }
 
 // GetTransactionsHandler godoc
 // @Summary      Get transactions
+// @Security     BearerAuth
 // @Description  Get all financial transactions for the authenticated user
 // @Tags         User Transactions
 // @Produce      json
@@ -85,20 +93,14 @@ func (h *TransactionHandler) CreateTransactionHandler(c *gin.Context) {
 func (h *TransactionHandler) GetTransactionsHandler(c *gin.Context) {
 	h.logger.Info("GetTransactionsHandler")
 
-	UserID, exists := c.Get("user_id")
-	if !exists {
+	userId := middleware.GetUser_id(c, h.config)
+	if userId == "" {
 		c.IndentedJSON(401, gin.H{"error": "User not authenticated"})
 		return
 	}
 
-	userIDStr, ok := UserID.(string)
-	if !ok {
-		c.IndentedJSON(500, gin.H{"error": "Invalid user ID format"})
-		return
-	}
-
 	resp, err := h.transaction.GetTransactions(c.Request.Context(), &pb.GetTransactionsRequest{
-		UserId: userIDStr,
+		UserId: userId,
 	})
 	if err != nil {
 		c.IndentedJSON(500, gin.H{"error": "Failed to get transactions"})
@@ -110,6 +112,7 @@ func (h *TransactionHandler) GetTransactionsHandler(c *gin.Context) {
 
 // GetTransactionByIdHandler godoc
 // @Summary      Get transaction by ID
+// @Security     BearerAuth
 // @Description  Get financial transaction details by transaction ID
 // @Tags         User Transactions
 // @Produce      json
@@ -139,6 +142,7 @@ func (h *TransactionHandler) GetTransactionByIdHandler(c *gin.Context) {
 
 // UpdateTransactionHandler godoc
 // @Summary      Update transaction
+// @Security     BearerAuth
 // @Description  Update financial transaction details by transaction ID
 // @Tags         User Transactions
 // @Accept       json
@@ -168,6 +172,7 @@ func (h *TransactionHandler) UpdateTransactionHandler(c *gin.Context) {
 
 // DeleteTransactionHandler godoc
 // @Summary      Delete transaction
+// @Security     BearerAuth
 // @Description  Delete financial transaction by transaction ID
 // @Tags         User Transactions
 // @Produce      json

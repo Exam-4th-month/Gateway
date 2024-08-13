@@ -24,7 +24,7 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
-        "/admin/auth/delete/{id}": {
+        "/admin/delete/{id}": {
             "delete": {
                 "description": "Soft delete a user by admin",
                 "consumes": [
@@ -83,7 +83,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/admin/auth/update/{id}": {
+        "/admin/update/{id}": {
             "put": {
                 "description": "Update a user's information by admin",
                 "consumes": [
@@ -512,6 +512,11 @@ const docTemplate = `{
         },
         "/user/account": {
             "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
                 "description": "Get all accounts for the authenticated user",
                 "produces": [
                     "application/json"
@@ -542,6 +547,11 @@ const docTemplate = `{
                 }
             },
             "put": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
                 "description": "Update account details by account ID",
                 "consumes": [
                     "application/json"
@@ -586,6 +596,11 @@ const docTemplate = `{
                 }
             },
             "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
                 "description": "Create a new account for the authenticated user",
                 "consumes": [
                     "application/json"
@@ -638,6 +653,11 @@ const docTemplate = `{
         },
         "/user/account/{id}": {
             "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
                 "description": "Get account details by account ID",
                 "produces": [
                     "application/json"
@@ -677,6 +697,11 @@ const docTemplate = `{
                 }
             },
             "delete": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
                 "description": "Delete account by account ID",
                 "produces": [
                     "application/json"
@@ -718,6 +743,11 @@ const docTemplate = `{
         },
         "/user/budget": {
             "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
                 "description": "Get all budgets for the authenticated user",
                 "produces": [
                     "application/json"
@@ -748,6 +778,11 @@ const docTemplate = `{
                 }
             },
             "put": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
                 "description": "Update budget details by budget ID",
                 "consumes": [
                     "application/json"
@@ -774,7 +809,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/gateway-service_genproto_budget.BudgetResponse"
+                            "$ref": "#/definitions/gin.H"
                         }
                     },
                     "400": {
@@ -792,6 +827,11 @@ const docTemplate = `{
                 }
             },
             "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
                 "description": "Create a new budget for the authenticated user",
                 "consumes": [
                     "application/json"
@@ -844,6 +884,11 @@ const docTemplate = `{
         },
         "/user/budget/{id}": {
             "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
                 "description": "Get budget details by budget ID",
                 "produces": [
                     "application/json"
@@ -883,6 +928,11 @@ const docTemplate = `{
                 }
             },
             "delete": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
                 "description": "Delete budget by budget ID",
                 "produces": [
                     "application/json"
@@ -924,6 +974,11 @@ const docTemplate = `{
         },
         "/user/category": {
             "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
                 "description": "Get all categories for the authenticated user",
                 "produces": [
                     "application/json"
@@ -954,6 +1009,11 @@ const docTemplate = `{
                 }
             },
             "put": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
                 "description": "Update category details by category ID",
                 "consumes": [
                     "application/json"
@@ -998,6 +1058,11 @@ const docTemplate = `{
                 }
             },
             "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
                 "description": "Create a new category for the authenticated user",
                 "consumes": [
                     "application/json"
@@ -1050,6 +1115,11 @@ const docTemplate = `{
         },
         "/user/category/{id}": {
             "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
                 "description": "Get category details by category ID",
                 "produces": [
                     "application/json"
@@ -1089,6 +1159,11 @@ const docTemplate = `{
                 }
             },
             "delete": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
                 "description": "Delete category by category ID",
                 "produces": [
                     "application/json"
@@ -1130,6 +1205,11 @@ const docTemplate = `{
         },
         "/user/goal": {
             "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
                 "description": "Get all financial goals for the authenticated user",
                 "produces": [
                     "application/json"
@@ -1160,6 +1240,11 @@ const docTemplate = `{
                 }
             },
             "put": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
                 "description": "Update financial goal details by goal ID",
                 "consumes": [
                     "application/json"
@@ -1186,7 +1271,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/gateway-service_genproto_goal.GoalResponse"
+                            "$ref": "#/definitions/gin.H"
                         }
                     },
                     "400": {
@@ -1204,6 +1289,11 @@ const docTemplate = `{
                 }
             },
             "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
                 "description": "Create a new financial goal for the authenticated user",
                 "consumes": [
                     "application/json"
@@ -1256,6 +1346,11 @@ const docTemplate = `{
         },
         "/user/goal/{id}": {
             "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
                 "description": "Get financial goal details by goal ID",
                 "produces": [
                     "application/json"
@@ -1295,6 +1390,11 @@ const docTemplate = `{
                 }
             },
             "delete": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
                 "description": "Delete financial goal by goal ID",
                 "produces": [
                     "application/json"
@@ -1334,8 +1434,198 @@ const docTemplate = `{
                 }
             }
         },
+        "/user/notification/": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Retrieve all notifications for the authenticated user",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "User Notifications"
+                ],
+                "summary": "Get user notifications",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/gateway-service_genproto_notification.NotificationsResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "User not authenticated",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "500": {
+                        "description": "Failed to retrieve notifications",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    }
+                }
+            }
+        },
+        "/user/notification/{id}": {
+            "put": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Mark the specified notification as read",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "User Notifications"
+                ],
+                "summary": "Mark a notification as read",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Notification ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "400": {
+                        "description": "Notification ID is required",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "500": {
+                        "description": "Failed to mark notification as read",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    }
+                }
+            }
+        },
+        "/user/report/incoming": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Retrieve an income report for a user between the specified start and end dates",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "User Reports"
+                ],
+                "summary": "Get income report",
+                "parameters": [
+                    {
+                        "description": "Get Income Report Request",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/gateway-service_internal_models.GetIncomeReportRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/gateway-service_genproto_report.IncomeReportResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid request payload",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "500": {
+                        "description": "Failed to retrieve income report",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    }
+                }
+            }
+        },
+        "/user/report/spending": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Retrieve a spending report for a user between the specified start and end dates",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "User Reports"
+                ],
+                "summary": "Get spending report",
+                "parameters": [
+                    {
+                        "description": "Get Spending Report Request",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/gateway-service_internal_models.GetSpendingReportRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/gateway-service_genproto_report.SpendingReportResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid request payload",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "500": {
+                        "description": "Failed to retrieve spending report",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    }
+                }
+            }
+        },
         "/user/transaction": {
             "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
                 "description": "Get all financial transactions for the authenticated user",
                 "produces": [
                     "application/json"
@@ -1366,6 +1656,11 @@ const docTemplate = `{
                 }
             },
             "put": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
                 "description": "Update financial transaction details by transaction ID",
                 "consumes": [
                     "application/json"
@@ -1410,6 +1705,11 @@ const docTemplate = `{
                 }
             },
             "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
                 "description": "Create a new financial transaction for the authenticated user",
                 "consumes": [
                     "application/json"
@@ -1436,7 +1736,7 @@ const docTemplate = `{
                     "201": {
                         "description": "Created",
                         "schema": {
-                            "$ref": "#/definitions/gateway-service_genproto_transaction.TransactionResponse"
+                            "$ref": "#/definitions/gin.H"
                         }
                     },
                     "400": {
@@ -1462,6 +1762,11 @@ const docTemplate = `{
         },
         "/user/transaction/{id}": {
             "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
                 "description": "Get financial transaction details by transaction ID",
                 "produces": [
                     "application/json"
@@ -1501,6 +1806,11 @@ const docTemplate = `{
                 }
             },
             "delete": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
                 "description": "Delete financial transaction by transaction ID",
                 "produces": [
                     "application/json"
@@ -1872,6 +2182,65 @@ const docTemplate = `{
                 }
             }
         },
+        "gateway-service_genproto_notification.NotificationResponse": {
+            "type": "object",
+            "properties": {
+                "created_at": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "is_read": {
+                    "type": "boolean"
+                },
+                "message": {
+                    "type": "string"
+                },
+                "user_id": {
+                    "type": "string"
+                }
+            }
+        },
+        "gateway-service_genproto_notification.NotificationsResponse": {
+            "type": "object",
+            "properties": {
+                "notifications": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/gateway-service_genproto_notification.NotificationResponse"
+                    }
+                }
+            }
+        },
+        "gateway-service_genproto_report.IncomeReportResponse": {
+            "type": "object",
+            "properties": {
+                "category_income": {
+                    "type": "object",
+                    "additionalProperties": {
+                        "type": "number"
+                    }
+                },
+                "total_income": {
+                    "type": "number"
+                }
+            }
+        },
+        "gateway-service_genproto_report.SpendingReportResponse": {
+            "type": "object",
+            "properties": {
+                "category_spending": {
+                    "type": "object",
+                    "additionalProperties": {
+                        "type": "number"
+                    }
+                },
+                "total_spending": {
+                    "type": "number"
+                }
+            }
+        },
         "gateway-service_genproto_transaction.TransactionResponse": {
             "type": "object",
             "properties": {
@@ -2025,6 +2394,28 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "type": {
+                    "type": "string"
+                }
+            }
+        },
+        "gateway-service_internal_models.GetIncomeReportRequest": {
+            "type": "object",
+            "properties": {
+                "end_date": {
+                    "type": "string"
+                },
+                "start_date": {
+                    "type": "string"
+                }
+            }
+        },
+        "gateway-service_internal_models.GetSpendingReportRequest": {
+            "type": "object",
+            "properties": {
+                "end_date": {
+                    "type": "string"
+                },
+                "start_date": {
                     "type": "string"
                 }
             }

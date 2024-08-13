@@ -1,11 +1,8 @@
 p, superadmin, /superadmin/*, *
 
-p, user, /user/auth/*, *
+p, admin, /admin/*, *
 
-p, admin, /admin/auth/*, *
-p, admin, /admin/medals/*, *
-p, admin, /admin/athletes/*, *
-p, admin, /admin/events/*, *
+p, user, /user/*, *
 
 g, admin, superadmin
 g, user, admin

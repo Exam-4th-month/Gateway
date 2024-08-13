@@ -60,7 +60,7 @@ func Run(handler *handler.Handler, logger *slog.Logger, config *config.Config, e
 	router.Use(gin.Recovery())
 
 	superadmin := router.Group("superadmin")
-	superadmin.Use(middleware.AuthzMiddleware("/superadmin", enforcer))
+	superadmin.Use(middleware.AuthzMiddleware("/superadmin", enforcer, config))
 	{
 		superadmin.POST("/createadmin", handler.AuthRepo.SuperAdminCreateAdminHandler)
 	}
@@ -86,18 +86,15 @@ func Run(handler *handler.Handler, logger *slog.Logger, config *config.Config, e
 	}
 
 	admin := router.Group("admin")
-	admin.Use(middleware.AuthzMiddleware("/admin", enforcer))
+	admin.Use(middleware.AuthzMiddleware("/admin", enforcer, config))
 	{
-		auth := admin.Group("auth")
-		{
-			auth.PUT("/update/:id", handler.AuthRepo.UpdateUserHandler)
-			auth.DELETE("/delete/:id", handler.AuthRepo.DeleteUserHandler)
-		}
+		admin.PUT("/update/:id", handler.AuthRepo.UpdateUserHandler)
+		admin.DELETE("/delete/:id", handler.AuthRepo.DeleteUserHandler)
 
 	}
 
 	user := router.Group("user")
-	user.Use(middleware.AuthzMiddleware("/user", enforcer))
+	// user.Use(middleware.AuthzMiddleware("/user", enforcer, config))
 	{
 		account := user.Group("account")
 		{
@@ -142,6 +139,18 @@ func Run(handler *handler.Handler, logger *slog.Logger, config *config.Config, e
 			transaction.GET("/:id", handler.BudgetingRepo.TransactionHandler.GetTransactionByIdHandler)
 			transaction.PUT("/", handler.BudgetingRepo.TransactionHandler.UpdateTransactionHandler)
 			transaction.DELETE("/:id", handler.BudgetingRepo.TransactionHandler.DeleteTransactionHandler)
+		}
+
+		report := user.Group("report")
+		{
+			report.GET("/spending", handler.BudgetingRepo.ReportHandler.GetSpendingReportHandler)
+			report.GET("/incoming", handler.BudgetingRepo.ReportHandler.GetIncomeReportHandler)
+		}
+
+		notification := user.Group("notification")
+		{
+			notification.GET("/", handler.BudgetingRepo.NotificationHandler.GetNotifications)
+			notification.PUT("/", handler.BudgetingRepo.NotificationHandler.MarkNotificationAsRead)
 		}
 	}
 

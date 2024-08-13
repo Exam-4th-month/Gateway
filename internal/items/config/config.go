@@ -10,7 +10,11 @@ type (
 	Config struct {
 		Server   ServerConfig
 		Redis    RedisConfig
+		JWT      JWTConfig
 		RabbitMQ RabbitMQConfig
+	}
+	JWTConfig struct {
+		SecretKey string
 	}
 	ServerConfig struct {
 		ServerPort    string
@@ -36,6 +40,7 @@ func (c *Config) Load() error {
 	c.Server.BudgetingPort = ":" + os.Getenv("BUDGETING_PORT")
 	c.Redis.Host = os.Getenv("REDIS_HOST")
 	c.Redis.Port = os.Getenv("REDIS_PORT")
+	c.JWT.SecretKey = os.Getenv("JWT_SECRET_KEY")
 	c.RabbitMQ.RabbitMQ = os.Getenv("RABBITMQ_URI")
 
 	return nil

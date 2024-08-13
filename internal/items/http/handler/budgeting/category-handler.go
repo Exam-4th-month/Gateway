@@ -2,6 +2,8 @@ package budgeting
 
 import (
 	pb "gateway-service/genproto/category"
+	"gateway-service/internal/items/config"
+	"gateway-service/internal/items/middleware"
 	"gateway-service/internal/items/msgbroker"
 	"gateway-service/internal/models"
 	"log/slog"
@@ -13,18 +15,21 @@ type CategoryHandler struct {
 	category  pb.CategoryServiceClient
 	logger    *slog.Logger
 	msgbroker *msgbroker.MsgBroker
+	config    *config.Config
 }
 
-func NewCategoryHandler(category pb.CategoryServiceClient, logger *slog.Logger, msgbroker *msgbroker.MsgBroker) *CategoryHandler {
+func NewCategoryHandler(category pb.CategoryServiceClient, logger *slog.Logger, msgbroker *msgbroker.MsgBroker, config *config.Config) *CategoryHandler {
 	return &CategoryHandler{
 		category:  category,
 		logger:    logger,
 		msgbroker: msgbroker,
+		config:    config,
 	}
 }
 
 // CreateCategoryHandler godoc
 // @Summary      Create a category
+// @Security     BearerAuth
 // @Description  Create a new category for the authenticated user
 // @Tags         User Categories
 // @Accept       json
@@ -38,15 +43,9 @@ func NewCategoryHandler(category pb.CategoryServiceClient, logger *slog.Logger, 
 func (h *CategoryHandler) CreateCategoryHandler(c *gin.Context) {
 	h.logger.Info("CreateCategoryHandler")
 
-	UserID, exists := c.Get("user_id")
-	if !exists {
+	userId := middleware.GetUser_id(c, h.config)
+	if userId == "" {
 		c.IndentedJSON(401, gin.H{"error": "User not authenticated"})
-		return
-	}
-
-	userIDStr, ok := UserID.(string)
-	if !ok {
-		c.IndentedJSON(500, gin.H{"error": "Invalid user ID format"})
 		return
 	}
 
@@ -57,7 +56,7 @@ func (h *CategoryHandler) CreateCategoryHandler(c *gin.Context) {
 	}
 
 	resp, err := h.category.CreateCategory(c.Request.Context(), &pb.CreateCategoryRequest{
-		UserId: userIDStr,
+		UserId: userId,
 		Name:   req.Name,
 		Type:   req.Type,
 	})
@@ -71,6 +70,7 @@ func (h *CategoryHandler) CreateCategoryHandler(c *gin.Context) {
 
 // GetCategoriesHandler godoc
 // @Summary      Get categories
+// @Security     BearerAuth
 // @Description  Get all categories for the authenticated user
 // @Tags         User Categories
 // @Produce      json
@@ -81,20 +81,14 @@ func (h *CategoryHandler) CreateCategoryHandler(c *gin.Context) {
 func (h *CategoryHandler) GetCategoriesHandler(c *gin.Context) {
 	h.logger.Info("GetCategoriesHandler")
 
-	UserID, exists := c.Get("user_id")
-	if !exists {
+	userId := middleware.GetUser_id(c, h.config)
+	if userId == "" {
 		c.IndentedJSON(401, gin.H{"error": "User not authenticated"})
 		return
 	}
 
-	userIDStr, ok := UserID.(string)
-	if !ok {
-		c.IndentedJSON(500, gin.H{"error": "Invalid user ID format"})
-		return
-	}
-
 	resp, err := h.category.GetCategories(c.Request.Context(), &pb.GetCategoriesRequest{
-		UserId: userIDStr,
+		UserId: userId,
 	})
 	if err != nil {
 		c.IndentedJSON(500, gin.H{"error": "Failed to get categories"})
@@ -106,6 +100,7 @@ func (h *CategoryHandler) GetCategoriesHandler(c *gin.Context) {
 
 // GetCategoryByIdHandler godoc
 // @Summary      Get category by ID
+// @Security     BearerAuth
 // @Description  Get category details by category ID
 // @Tags         User Categories
 // @Produce      json
@@ -136,6 +131,7 @@ func (h *CategoryHandler) GetCategoryByIdHandler(c *gin.Context) {
 
 // UpdateCategoryHandler godoc
 // @Summary      Update category
+// @Security     BearerAuth
 // @Description  Update category details by category ID
 // @Tags         User Categories
 // @Accept       json
@@ -165,6 +161,7 @@ func (h *CategoryHandler) UpdateCategoryHandler(c *gin.Context) {
 
 // DeleteCategoryHandler godoc
 // @Summary      Delete category
+// @Security     BearerAuth
 // @Description  Delete category by category ID
 // @Tags         User Categories
 // @Produce      json
