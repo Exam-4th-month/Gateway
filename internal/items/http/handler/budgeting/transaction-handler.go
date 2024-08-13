@@ -1,7 +1,10 @@
 package budgeting
 
 import (
+	"fmt"
+	not_pb "gateway-service/genproto/notification"
 	pb "gateway-service/genproto/transaction"
+
 	"gateway-service/internal/items/config"
 	"gateway-service/internal/items/middleware"
 	"gateway-service/internal/items/msgbroker"
@@ -13,18 +16,20 @@ import (
 )
 
 type TransactionHandler struct {
-	transaction pb.TransactionServiceClient
-	logger      *slog.Logger
-	msgbroker   *msgbroker.MsgBroker
-	config      *config.Config
+	transaction  pb.TransactionServiceClient
+	notification not_pb.NotificationServiceClient
+	logger       *slog.Logger
+	msgbroker    *msgbroker.MsgBroker
+	config       *config.Config
 }
 
-func NewTransactionHandler(transaction pb.TransactionServiceClient, logger *slog.Logger, msgbroker *msgbroker.MsgBroker, config *config.Config) *TransactionHandler {
+func NewTransactionHandler(notification not_pb.NotificationServiceClient, transaction pb.TransactionServiceClient, logger *slog.Logger, msgbroker *msgbroker.MsgBroker, config *config.Config) *TransactionHandler {
 	return &TransactionHandler{
-		transaction: transaction,
-		logger:      logger,
-		msgbroker:   msgbroker,
-		config:      config,
+		transaction:  transaction,
+		notification: notification,
+		logger:       logger,
+		msgbroker:    msgbroker,
+		config:       config,
 	}
 }
 
@@ -75,6 +80,22 @@ func (h *TransactionHandler) CreateTransactionHandler(c *gin.Context) {
 	err = h.msgbroker.TransactionCreated(body)
 	if err != nil {
 		c.IndentedJSON(400, gin.H{"error": "Error while creating transaction"})
+	}
+
+	notification := not_pb.CreateNotificationRequest{
+		UserId:  userId,
+		Message: fmt.Sprintf("Transaction of %.2f has been created for account ID: %s", req.Amount, req.AccountID),
+	}
+
+	body, err = protojson.Marshal(&notification)
+	if err != nil {
+		c.IndentedJSON(400, gin.H{"error": "Error while marshaling request"})
+		return
+	}
+
+	err = h.msgbroker.NotificationCreated(body)
+	if err != nil {
+		c.IndentedJSON(400, gin.H{"error": "Error while creating notification"})
 	}
 
 	c.IndentedJSON(201, gin.H{"message": "Transaction created successfully!"})

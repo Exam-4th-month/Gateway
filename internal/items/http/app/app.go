@@ -94,7 +94,7 @@ func Run(handler *handler.Handler, logger *slog.Logger, config *config.Config, e
 	}
 
 	user := router.Group("user")
-	// user.Use(middleware.AuthzMiddleware("/user", enforcer, config))
+	user.Use(middleware.AuthzMiddleware("/user", enforcer, config))
 	{
 		account := user.Group("account")
 		{
@@ -145,6 +145,8 @@ func Run(handler *handler.Handler, logger *slog.Logger, config *config.Config, e
 		{
 			report.GET("/spending", handler.BudgetingRepo.ReportHandler.GetSpendingReportHandler)
 			report.GET("/incoming", handler.BudgetingRepo.ReportHandler.GetIncomeReportHandler)
+			report.GET("/bugdet", handler.BudgetingRepo.ReportHandler.GetBudgetPerformanceReportHandler)
+			report.GET("/goal", handler.BudgetingRepo.ReportHandler.GetGoalProgressReportHandler)
 		}
 
 		notification := user.Group("notification")

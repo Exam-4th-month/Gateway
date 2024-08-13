@@ -1521,6 +1521,110 @@
                 }
             }
         },
+        "/user/report/bugdet": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Retrieve a budget performance report for a specific budget by its ID",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "User Reports"
+                ],
+                "summary": "Get budget performance report",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Budget ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/gateway-service_genproto_report.BudgetPerformanceReportResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid request payload",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "401": {
+                        "description": "User not authenticated",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "500": {
+                        "description": "Failed to retrieve budget performance report",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    }
+                }
+            }
+        },
+        "/user/report/goal": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Retrieve a goal progress report for a specific goal by its ID",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "User Reports"
+                ],
+                "summary": "Get goal progress report",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Goal ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/gateway-service_genproto_report.GoalProgressReportResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid request payload",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "401": {
+                        "description": "User not authenticated",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "500": {
+                        "description": "Failed to retrieve goal progress report",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    }
+                }
+            }
+        },
         "/user/report/incoming": {
             "get": {
                 "security": [
@@ -2208,6 +2312,40 @@
                     "items": {
                         "$ref": "#/definitions/gateway-service_genproto_notification.NotificationResponse"
                     }
+                }
+            }
+        },
+        "gateway-service_genproto_report.BudgetPerformanceReportResponse": {
+            "type": "object",
+            "properties": {
+                "category_performance": {
+                    "type": "object",
+                    "additionalProperties": {
+                        "type": "number"
+                    }
+                },
+                "total_budget": {
+                    "type": "number"
+                },
+                "total_spent": {
+                    "type": "number"
+                }
+            }
+        },
+        "gateway-service_genproto_report.GoalProgressReportResponse": {
+            "type": "object",
+            "properties": {
+                "category_performance": {
+                    "type": "object",
+                    "additionalProperties": {
+                        "type": "number"
+                    }
+                },
+                "target_amount": {
+                    "type": "number"
+                },
+                "total_progress": {
+                    "type": "number"
                 }
             }
         },

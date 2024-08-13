@@ -33,3 +33,9 @@
 {"time":"2024-08-13T13:53:35.267434124+05:00","level":"INFO","msg":"Message published","queue":"transaction_created"}
 {"time":"2024-08-13T13:55:24.842862236+05:00","level":"INFO","msg":"CreateTransactionHandler"}
 {"time":"2024-08-13T13:55:24.843285287+05:00","level":"INFO","msg":"Message published","queue":"transaction_created"}
+{"time":"2024-08-13T16:19:29.989358569+05:00","level":"INFO","msg":"LoginHandler called"}
+{"time":"2024-08-13T16:34:08.964019511+05:00","level":"INFO","msg":"LoginHandler called"}
+{"time":"2024-08-13T16:47:15.583877594+05:00","level":"INFO","msg":"LoginHandler called"}
+{"time":"2024-08-13T16:51:49.513617844+05:00","level":"INFO","msg":"CreateAccountHandler"}
+{"time":"2024-08-13T16:53:08.207182813+05:00","level":"INFO","msg":"GetAccountsHandler"}
+{"time":"2024-08-13T16:54:07.775651282+05:00","level":"INFO","msg":"GetAccountByIdHandler"}

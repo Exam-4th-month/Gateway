@@ -233,6 +233,28 @@ definitions:
           $ref: '#/definitions/gateway-service_genproto_notification.NotificationResponse'
         type: array
     type: object
+  gateway-service_genproto_report.BudgetPerformanceReportResponse:
+    properties:
+      category_performance:
+        additionalProperties:
+          type: number
+        type: object
+      total_budget:
+        type: number
+      total_spent:
+        type: number
+    type: object
+  gateway-service_genproto_report.GoalProgressReportResponse:
+    properties:
+      category_performance:
+        additionalProperties:
+          type: number
+        type: object
+      target_amount:
+        type: number
+      total_progress:
+        type: number
+    type: object
   gateway-service_genproto_report.IncomeReportResponse:
     properties:
       category_income:
@@ -1342,6 +1364,73 @@ paths:
       summary: Mark a notification as read
       tags:
       - User Notifications
+  /user/report/bugdet:
+    get:
+      description: Retrieve a budget performance report for a specific budget by its
+        ID
+      parameters:
+      - description: Budget ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/gateway-service_genproto_report.BudgetPerformanceReportResponse'
+        "400":
+          description: Invalid request payload
+          schema:
+            $ref: '#/definitions/gin.H'
+        "401":
+          description: User not authenticated
+          schema:
+            $ref: '#/definitions/gin.H'
+        "500":
+          description: Failed to retrieve budget performance report
+          schema:
+            $ref: '#/definitions/gin.H'
+      security:
+      - BearerAuth: []
+      summary: Get budget performance report
+      tags:
+      - User Reports
+  /user/report/goal:
+    get:
+      description: Retrieve a goal progress report for a specific goal by its ID
+      parameters:
+      - description: Goal ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/gateway-service_genproto_report.GoalProgressReportResponse'
+        "400":
+          description: Invalid request payload
+          schema:
+            $ref: '#/definitions/gin.H'
+        "401":
+          description: User not authenticated
+          schema:
+            $ref: '#/definitions/gin.H'
+        "500":
+          description: Failed to retrieve goal progress report
+          schema:
+            $ref: '#/definitions/gin.H'
+      security:
+      - BearerAuth: []
+      summary: Get goal progress report
+      tags:
+      - User Reports
   /user/report/incoming:
     get:
       description: Retrieve an income report for a user between the specified start

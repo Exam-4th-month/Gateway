@@ -59,7 +59,7 @@ func NewBudgetingHandler(logger *slog.Logger, msgbroker *msgbroker.MsgBroker, co
 		GoalHandler:         NewGoalHandler(clientConn.GoalClient, logger, msgbroker, config),
 		NotificationHandler: NewNotificationHandler(clientConn.NotificationClient, logger, msgbroker, config),
 		ReportHandler:       NewReportHandler(clientConn.ReportClient, logger, msgbroker, config),
-		TransactionHandler:  NewTransactionHandler(clientConn.TransactionClient, logger, msgbroker, config),
+		TransactionHandler:  NewTransactionHandler(clientConn.NotificationClient, clientConn.TransactionClient, logger, msgbroker, config),
 	}
 }
 

@@ -2,7 +2,6 @@ package middleware
 
 import (
 	"gateway-service/internal/items/config"
-	"log"
 
 	casbin "github.com/casbin/casbin/v2"
 
@@ -28,7 +27,6 @@ func AuthzMiddleware(path string, enforcer *casbin.Enforcer, config *config.Conf
 
 func getRole(c *gin.Context, config *config.Config) string {
 	tokenString := c.GetHeader("Authorization")
-	log.Println(tokenString)
 	if tokenString == "" {
 		return ""
 	}
