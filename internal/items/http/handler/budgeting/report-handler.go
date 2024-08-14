@@ -37,7 +37,7 @@ func NewReportHandler(report pb.ReportServiceClient, logger *slog.Logger, msgbro
 // @Success      200     {object}  pb.SpendingReportResponse
 // @Failure      400     {object}  gin.H "Invalid request payload"
 // @Failure      500     {object}  gin.H "Failed to retrieve spending report"
-// @Router       /user/report/spending [get]
+// @Router       /user/report/spending [post]
 func (h *ReportHandler) GetSpendingReportHandler(c *gin.Context) {
 	h.logger.Info("GetSpendingReportHandler called")
 
@@ -76,7 +76,7 @@ func (h *ReportHandler) GetSpendingReportHandler(c *gin.Context) {
 // @Success      200     {object}  pb.IncomeReportResponse
 // @Failure      400     {object}  gin.H "Invalid request payload"
 // @Failure      500     {object}  gin.H "Failed to retrieve income report"
-// @Router       /user/report/incoming [get]
+// @Router       /user/report/incoming [post]
 func (h *ReportHandler) GetIncomeReportHandler(c *gin.Context) {
 	h.logger.Info("GetIncomeReportHandler called")
 
@@ -116,7 +116,7 @@ func (h *ReportHandler) GetIncomeReportHandler(c *gin.Context) {
 // @Failure      400    {object}  gin.H "Invalid request payload"
 // @Failure      401    {object}  gin.H "User not authenticated"
 // @Failure      500    {object}  gin.H "Failed to retrieve budget performance report"
-// @Router       /user/report/bugdet [get]
+// @Router       /user/report/bugdet [post]
 func (h *ReportHandler) GetBudgetPerformanceReportHandler(c *gin.Context) {
 	h.logger.Info("GetBudgetPerformanceReportHandler called")
 
@@ -155,7 +155,7 @@ func (h *ReportHandler) GetBudgetPerformanceReportHandler(c *gin.Context) {
 // @Failure      400    {object}  gin.H "Invalid request payload"
 // @Failure      401    {object}  gin.H "User not authenticated"
 // @Failure      500    {object}  gin.H "Failed to retrieve goal progress report"
-// @Router       /user/report/goal [get]
+// @Router       /user/report/goal [post]
 func (h *ReportHandler) GetGoalProgressReportHandler(c *gin.Context) {
 	h.logger.Info("GetGoalProgressReportHandler called")
 

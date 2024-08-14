@@ -4,6 +4,7 @@ import (
 	"fmt"
 	not_pb "gateway-service/genproto/notification"
 	pb "gateway-service/genproto/transaction"
+	"time"
 
 	"gateway-service/internal/items/config"
 	"gateway-service/internal/items/middleware"
@@ -68,7 +69,7 @@ func (h *TransactionHandler) CreateTransactionHandler(c *gin.Context) {
 		Amount:      req.Amount,
 		Type:        req.Type,
 		Description: req.Description,
-		Date:        req.Date,
+		Date:        time.Now().Format("2006-01-02"),
 	}
 
 	body, err := protojson.Marshal(&request)
@@ -77,7 +78,7 @@ func (h *TransactionHandler) CreateTransactionHandler(c *gin.Context) {
 		return
 	}
 
-	err = h.msgbroker.TransactionCreated(body)
+	err = h.msgbroker.TransactionCreated(c.Request.Context(), body)
 	if err != nil {
 		c.IndentedJSON(400, gin.H{"error": "Error while creating transaction"})
 	}
@@ -93,7 +94,7 @@ func (h *TransactionHandler) CreateTransactionHandler(c *gin.Context) {
 		return
 	}
 
-	err = h.msgbroker.NotificationCreated(body)
+	err = h.msgbroker.NotificationCreated(c.Request.Context(), body)
 	if err != nil {
 		c.IndentedJSON(400, gin.H{"error": "Error while creating notification"})
 	}

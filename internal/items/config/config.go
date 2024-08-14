@@ -8,10 +8,9 @@ import (
 
 type (
 	Config struct {
-		Server   ServerConfig
-		Redis    RedisConfig
-		JWT      JWTConfig
-		RabbitMQ RabbitMQConfig
+		Server ServerConfig
+		JWT    JWTConfig
+		Kafka  KafkaConfig
 	}
 	JWTConfig struct {
 		SecretKey string
@@ -21,12 +20,8 @@ type (
 		AuthPort      string
 		BudgetingPort string
 	}
-	RedisConfig struct {
-		Host string
-		Port string
-	}
-	RabbitMQConfig struct {
-		RabbitMQ string
+	KafkaConfig struct {
+		Brokers string
 	}
 )
 
@@ -38,10 +33,8 @@ func (c *Config) Load() error {
 	c.Server.ServerPort = ":" + os.Getenv("SERVER_PORT")
 	c.Server.AuthPort = ":" + os.Getenv("AUTH_PORT")
 	c.Server.BudgetingPort = ":" + os.Getenv("BUDGETING_PORT")
-	c.Redis.Host = os.Getenv("REDIS_HOST")
-	c.Redis.Port = os.Getenv("REDIS_PORT")
 	c.JWT.SecretKey = os.Getenv("JWT_SECRET_KEY")
-	c.RabbitMQ.RabbitMQ = os.Getenv("RABBITMQ_URI")
+	c.Kafka.Brokers = os.Getenv("KAFKA_BROKER_URI")
 
 	return nil
 }

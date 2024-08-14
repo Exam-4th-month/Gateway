@@ -368,8 +368,6 @@ definitions:
         type: number
       category_id:
         type: string
-      date:
-        type: string
       description:
         type: string
       type:
@@ -1365,7 +1363,7 @@ paths:
       tags:
       - User Notifications
   /user/report/bugdet:
-    get:
+    post:
       description: Retrieve a budget performance report for a specific budget by its
         ID
       parameters:
@@ -1399,7 +1397,7 @@ paths:
       tags:
       - User Reports
   /user/report/goal:
-    get:
+    post:
       description: Retrieve a goal progress report for a specific goal by its ID
       parameters:
       - description: Goal ID
@@ -1432,7 +1430,7 @@ paths:
       tags:
       - User Reports
   /user/report/incoming:
-    get:
+    post:
       description: Retrieve an income report for a user between the specified start
         and end dates
       parameters:
@@ -1463,7 +1461,7 @@ paths:
       tags:
       - User Reports
   /user/report/spending:
-    get:
+    post:
       description: Retrieve a spending report for a user between the specified start
         and end dates
       parameters:

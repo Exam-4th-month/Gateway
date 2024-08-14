@@ -9,9 +9,7 @@ import (
 	"gateway-service/internal/items/http/handler/budgeting"
 	msgbroker "gateway-service/internal/items/msgbroker"
 
-	amqp "github.com/rabbitmq/amqp091-go"
-
-	"gateway-service/internal/items/redisservice"
+	"github.com/segmentio/kafka-go"
 )
 
 type Handler struct {
@@ -19,11 +17,11 @@ type Handler struct {
 	BudgetingRepo *budgeting.BudgetingHandler
 }
 
-func New(redis *redisservice.RedisService, logger *slog.Logger, config *config.Config, channel *amqp.Channel) *Handler {
-	msgbroker := msgbroker.NewMsgBroker(channel, logger)
+func New(logger *slog.Logger, config *config.Config, writer *kafka.Writer) *Handler {
+	msgbroker := msgbroker.NewMsgBroker(writer, logger)
 
 	return &Handler{
-		AuthRepo:      auth.NewAuthHandler(logger, redis, config),
+		AuthRepo:      auth.NewAuthHandler(logger, config),
 		BudgetingRepo: budgeting.NewBudgetingHandler(logger, msgbroker, config),
 	}
 }

@@ -6,7 +6,6 @@ import (
 
 	pb "gateway-service/genproto/auth"
 	"gateway-service/internal/items/config"
-	"gateway-service/internal/items/redisservice"
 
 	"github.com/gin-gonic/gin"
 	"google.golang.org/grpc"
@@ -16,19 +15,18 @@ import (
 type AuthHandler struct {
 	auth   pb.AuthServiceClient
 	logger *slog.Logger
-	redis  *redisservice.RedisService
 }
 
-func NewAuthHandler(logger *slog.Logger, redis *redisservice.RedisService, config *config.Config) *AuthHandler {
+func NewAuthHandler(logger *slog.Logger, config *config.Config) *AuthHandler {
 	return &AuthHandler{
-		auth:   pb.NewAuthServiceClient(connect(config.Server.AuthPort)),
+		auth:   pb.NewAuthServiceClient(connect("localhost", config.Server.AuthPort)),
 		logger: logger,
-		redis:  redis,
 	}
 }
 
-func connect(port string) *grpc.ClientConn {
-	conn, err := grpc.NewClient(port, grpc.WithTransportCredentials(insecure.NewCredentials()))
+func connect(host, port string) *grpc.ClientConn {
+	address := host + port
+	conn, err := grpc.NewClient(address, grpc.WithTransportCredentials(insecure.NewCredentials()))
 	if err != nil {
 		log.Fatal(err)
 	}

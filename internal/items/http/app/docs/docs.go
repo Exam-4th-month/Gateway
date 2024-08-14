@@ -1524,7 +1524,7 @@ const docTemplate = `{
             }
         },
         "/user/report/bugdet": {
-            "get": {
+            "post": {
                 "security": [
                     {
                         "BearerAuth": []
@@ -1576,7 +1576,7 @@ const docTemplate = `{
             }
         },
         "/user/report/goal": {
-            "get": {
+            "post": {
                 "security": [
                     {
                         "BearerAuth": []
@@ -1628,7 +1628,7 @@ const docTemplate = `{
             }
         },
         "/user/report/incoming": {
-            "get": {
+            "post": {
                 "security": [
                     {
                         "BearerAuth": []
@@ -1676,7 +1676,7 @@ const docTemplate = `{
             }
         },
         "/user/report/spending": {
-            "get": {
+            "post": {
                 "security": [
                     {
                         "BearerAuth": []
@@ -2523,9 +2523,6 @@ const docTemplate = `{
                     "type": "number"
                 },
                 "category_id": {
-                    "type": "string"
-                },
-                "date": {
                     "type": "string"
                 },
                 "description": {

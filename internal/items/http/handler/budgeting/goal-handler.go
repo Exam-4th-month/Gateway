@@ -160,7 +160,7 @@ func (h *GoalHandler) UpdateGoalHandler(c *gin.Context) {
 		return
 	}
 
-	err = h.msgbroker.GoalProgressUpdated(body)
+	err = h.msgbroker.GoalProgressUpdated(c.Request.Context(), body)
 	if err != nil {
 		c.IndentedJSON(400, gin.H{"error": "Error while updating goal"})
 	}

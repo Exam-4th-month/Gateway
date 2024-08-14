@@ -29,13 +29,13 @@ type BudgetClientConn struct {
 
 func NewBudgetClientConn(config *config.Config) *BudgetClientConn {
 	return &BudgetClientConn{
-		AccountClient:      account.NewAccountServiceClient(connect(config.Server.BudgetingPort)),
-		BudgetClient:       budget.NewBudgetServiceClient(connect(config.Server.BudgetingPort)),
-		CategoryClient:     category.NewCategoryServiceClient(connect(config.Server.BudgetingPort)),
-		GoalClient:         goal.NewGoalServiceClient(connect(config.Server.BudgetingPort)),
-		NotificationClient: notification.NewNotificationServiceClient(connect(config.Server.BudgetingPort)),
-		ReportClient:       report.NewReportServiceClient(connect(config.Server.BudgetingPort)),
-		TransactionClient:  transaction.NewTransactionServiceClient(connect(config.Server.BudgetingPort)),
+		AccountClient:      account.NewAccountServiceClient(connect("localhost", config.Server.BudgetingPort)),
+		BudgetClient:       budget.NewBudgetServiceClient(connect("localhost", config.Server.BudgetingPort)),
+		CategoryClient:     category.NewCategoryServiceClient(connect("localhost", config.Server.BudgetingPort)),
+		GoalClient:         goal.NewGoalServiceClient(connect("localhost", config.Server.BudgetingPort)),
+		NotificationClient: notification.NewNotificationServiceClient(connect("localhost", config.Server.BudgetingPort)),
+		ReportClient:       report.NewReportServiceClient(connect("localhost", config.Server.BudgetingPort)),
+		TransactionClient:  transaction.NewTransactionServiceClient(connect("localhost", config.Server.BudgetingPort)),
 	}
 }
 
@@ -63,8 +63,9 @@ func NewBudgetingHandler(logger *slog.Logger, msgbroker *msgbroker.MsgBroker, co
 	}
 }
 
-func connect(port string) *grpc.ClientConn {
-	conn, err := grpc.NewClient(port, grpc.WithTransportCredentials(insecure.NewCredentials()))
+func connect(host, port string) *grpc.ClientConn {
+	address := host + port
+	conn, err := grpc.NewClient(address, grpc.WithTransportCredentials(insecure.NewCredentials()))
 	if err != nil {
 		log.Fatal(err)
 	}

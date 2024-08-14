@@ -143,10 +143,10 @@ func Run(handler *handler.Handler, logger *slog.Logger, config *config.Config, e
 
 		report := user.Group("report")
 		{
-			report.GET("/spending", handler.BudgetingRepo.ReportHandler.GetSpendingReportHandler)
-			report.GET("/incoming", handler.BudgetingRepo.ReportHandler.GetIncomeReportHandler)
-			report.GET("/bugdet", handler.BudgetingRepo.ReportHandler.GetBudgetPerformanceReportHandler)
-			report.GET("/goal", handler.BudgetingRepo.ReportHandler.GetGoalProgressReportHandler)
+			report.POST("/spending", handler.BudgetingRepo.ReportHandler.GetSpendingReportHandler)
+			report.POST("/incoming", handler.BudgetingRepo.ReportHandler.GetIncomeReportHandler)
+			report.POST("/bugdet", handler.BudgetingRepo.ReportHandler.GetBudgetPerformanceReportHandler)
+			report.POST("/goal", handler.BudgetingRepo.ReportHandler.GetGoalProgressReportHandler)
 		}
 
 		notification := user.Group("notification")
@@ -156,5 +156,5 @@ func Run(handler *handler.Handler, logger *slog.Logger, config *config.Config, e
 		}
 	}
 
-	return router.Run(config.Server.ServerPort)
+	return router.Run("localhost"+config.Server.ServerPort)
 }

@@ -160,7 +160,7 @@ func (h *BudgetHandler) UpdateBudgetHandler(c *gin.Context) {
 		return
 	}
 
-	err = h.msgbroker.BudgetUpdated(body)
+	err = h.msgbroker.BudgetUpdated(c.Request.Context(), body)
 	if err != nil {
 		c.IndentedJSON(400, gin.H{"error": "Error while updating budjet"})
 	}

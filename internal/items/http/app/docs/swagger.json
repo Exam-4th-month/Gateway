@@ -1522,7 +1522,7 @@
             }
         },
         "/user/report/bugdet": {
-            "get": {
+            "post": {
                 "security": [
                     {
                         "BearerAuth": []
@@ -1574,7 +1574,7 @@
             }
         },
         "/user/report/goal": {
-            "get": {
+            "post": {
                 "security": [
                     {
                         "BearerAuth": []
@@ -1626,7 +1626,7 @@
             }
         },
         "/user/report/incoming": {
-            "get": {
+            "post": {
                 "security": [
                     {
                         "BearerAuth": []
@@ -1674,7 +1674,7 @@
             }
         },
         "/user/report/spending": {
-            "get": {
+            "post": {
                 "security": [
                     {
                         "BearerAuth": []
@@ -2521,9 +2521,6 @@
                     "type": "number"
                 },
                 "category_id": {
-                    "type": "string"
-                },
-                "date": {
                     "type": "string"
                 },
                 "description": {

@@ -7,13 +7,11 @@ import (
 	"path/filepath"
 
 	casbin "github.com/casbin/casbin/v2"
-	amqp "github.com/rabbitmq/amqp091-go"
+	"github.com/segmentio/kafka-go"
 
 	"gateway-service/internal/items/config"
 	"gateway-service/internal/items/http/app"
 	"gateway-service/internal/items/http/handler"
-	"gateway-service/internal/items/redisservice"
-	redisCl "gateway-service/internal/pkg/redis"
 )
 
 func main() {
@@ -30,11 +28,6 @@ func main() {
 
 	logger := slog.New(slog.NewJSONHandler(logFile, nil))
 
-	redis, err := redisCl.NewRedisDB(config)
-	if err != nil {
-		log.Fatal(err)
-	}
-
 	modelPath := filepath.Join("internal", "items", "casbin", "model.conf")
 	policyPath := filepath.Join("internal", "items", "casbin", "policy.csv")
 
@@ -43,19 +36,15 @@ func main() {
 		log.Fatal(err)
 	}
 
-	conn, err := amqp.Dial(config.RabbitMQ.RabbitMQ)
-	if err != nil {
-		log.Fatalf("Failed to connect to RabbitMQ: %v", err)
-	}
-	defer conn.Close()
+	// time.Sleep(10 * time.Second)
 
-	ch, err := conn.Channel()
-	if err != nil {
-		log.Fatalf("Failed to open a channel: %v", err)
-	}
-	defer ch.Close()
+	writer := kafka.NewWriter(kafka.WriterConfig{
+		Brokers: []string{config.Kafka.Brokers},
+		Logger:  log.New(os.Stdout, "kafka writer: ", 0),
+	})
+	defer writer.Close()
 
-	handler := handler.New(redisservice.New(redis, logger), logger, config, ch)
+	handler := handler.New(logger, config, writer)
 
 	log.Fatal(app.Run(handler, logger, config, enforcer))
 }
