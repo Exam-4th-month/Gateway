@@ -19,7 +19,7 @@ type AuthHandler struct {
 
 func NewAuthHandler(logger *slog.Logger, config *config.Config) *AuthHandler {
 	return &AuthHandler{
-		auth:   pb.NewAuthServiceClient(connect("localhost", config.Server.AuthPort)),
+		auth:   pb.NewAuthServiceClient(connect("auth", config.Server.AuthPort)),
 		logger: logger,
 	}
 }

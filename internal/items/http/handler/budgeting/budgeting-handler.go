@@ -10,6 +10,7 @@ import (
 	"gateway-service/genproto/transaction"
 	"gateway-service/internal/items/config"
 	"gateway-service/internal/items/msgbroker"
+	"gateway-service/internal/items/redisservice"
 	"log"
 	"log/slog"
 
@@ -29,13 +30,13 @@ type BudgetClientConn struct {
 
 func NewBudgetClientConn(config *config.Config) *BudgetClientConn {
 	return &BudgetClientConn{
-		AccountClient:      account.NewAccountServiceClient(connect("localhost", config.Server.BudgetingPort)),
-		BudgetClient:       budget.NewBudgetServiceClient(connect("localhost", config.Server.BudgetingPort)),
-		CategoryClient:     category.NewCategoryServiceClient(connect("localhost", config.Server.BudgetingPort)),
-		GoalClient:         goal.NewGoalServiceClient(connect("localhost", config.Server.BudgetingPort)),
-		NotificationClient: notification.NewNotificationServiceClient(connect("localhost", config.Server.BudgetingPort)),
-		ReportClient:       report.NewReportServiceClient(connect("localhost", config.Server.BudgetingPort)),
-		TransactionClient:  transaction.NewTransactionServiceClient(connect("localhost", config.Server.BudgetingPort)),
+		AccountClient:      account.NewAccountServiceClient(connect("budgeting", config.Server.BudgetingPort)),
+		BudgetClient:       budget.NewBudgetServiceClient(connect("budgeting", config.Server.BudgetingPort)),
+		CategoryClient:     category.NewCategoryServiceClient(connect("budgeting", config.Server.BudgetingPort)),
+		GoalClient:         goal.NewGoalServiceClient(connect("budgeting", config.Server.BudgetingPort)),
+		NotificationClient: notification.NewNotificationServiceClient(connect("budgeting", config.Server.BudgetingPort)),
+		ReportClient:       report.NewReportServiceClient(connect("budgeting", config.Server.BudgetingPort)),
+		TransactionClient:  transaction.NewTransactionServiceClient(connect("budgeting", config.Server.BudgetingPort)),
 	}
 }
 
@@ -49,11 +50,11 @@ type BudgetingHandler struct {
 	TransactionHandler  *TransactionHandler
 }
 
-func NewBudgetingHandler(logger *slog.Logger, msgbroker *msgbroker.MsgBroker, config *config.Config) *BudgetingHandler {
+func NewBudgetingHandler(redis *redisservice.RedisService, logger *slog.Logger, msgbroker *msgbroker.MsgBroker, config *config.Config) *BudgetingHandler {
 	clientConn := NewBudgetClientConn(config)
 
 	return &BudgetingHandler{
-		AccountHandler:      NewAccountHandler(clientConn.AccountClient, logger, msgbroker, config),
+		AccountHandler:      NewAccountHandler(redis, clientConn.AccountClient, logger, msgbroker, config),
 		BudgetHandler:       NewBudgetHandler(clientConn.BudgetClient, logger, msgbroker, config),
 		CategoryHandler:     NewCategoryHandler(clientConn.CategoryClient, logger, msgbroker, config),
 		GoalHandler:         NewGoalHandler(clientConn.GoalClient, logger, msgbroker, config),

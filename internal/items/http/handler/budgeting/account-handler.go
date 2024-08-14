@@ -5,6 +5,7 @@ import (
 	"gateway-service/internal/items/config"
 	"gateway-service/internal/items/middleware"
 	"gateway-service/internal/items/msgbroker"
+	"gateway-service/internal/items/redisservice"
 	"gateway-service/internal/models"
 	"log/slog"
 
@@ -12,14 +13,16 @@ import (
 )
 
 type AccountHandler struct {
+	redis     *redisservice.RedisService
 	account   pb.AccountServiceClient
 	logger    *slog.Logger
 	msgbroker *msgbroker.MsgBroker
 	config    *config.Config
 }
 
-func NewAccountHandler(account pb.AccountServiceClient, logger *slog.Logger, msgbroker *msgbroker.MsgBroker, config *config.Config) *AccountHandler {
+func NewAccountHandler(redis *redisservice.RedisService, account pb.AccountServiceClient, logger *slog.Logger, msgbroker *msgbroker.MsgBroker, config *config.Config) *AccountHandler {
 	return &AccountHandler{
+		redis:     redis,
 		account:   account,
 		logger:    logger,
 		msgbroker: msgbroker,
@@ -65,6 +68,10 @@ func (h *AccountHandler) CreateAccountHandler(c *gin.Context) {
 	if err != nil {
 		c.IndentedJSON(500, gin.H{"error": "Failed to create account"})
 		return
+	}
+
+	if _, err := h.redis.StoreAccountInRedis(c.Request.Context(), resp); err != nil {
+		h.logger.Error("Error storing account in Redis:", slog.String("err: ", err.Error()))
 	}
 
 	c.IndentedJSON(201, resp)
@@ -118,6 +125,15 @@ func (h *AccountHandler) GetAccountByIdHandler(c *gin.Context) {
 	if accountID == "" {
 		c.IndentedJSON(400, gin.H{"error": "Account ID is required"})
 		return
+	}
+	
+	acc, err := h.redis.GetAccountFromRedis(c.Request.Context(), accountID)
+	if err != nil {
+		h.logger.Error("Error getting account from Redis:", slog.String("err: ", err.Error()))
+	}
+	if acc != nil {
+		h.logger.Info("Account found in Redis")
+		c.IndentedJSON(200, acc)
 	}
 
 	resp, err := h.account.GetAccountById(c.Request.Context(), &pb.GetAccountByIdRequest{

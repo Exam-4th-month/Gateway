@@ -156,5 +156,5 @@ func Run(handler *handler.Handler, logger *slog.Logger, config *config.Config, e
 		}
 	}
 
-	return router.Run("localhost"+config.Server.ServerPort)
+	return router.Run("gateway"+config.Server.ServerPort)
 }

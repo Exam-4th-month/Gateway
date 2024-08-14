@@ -2,6 +2,7 @@ package msgbroker
 
 import (
 	"context"
+	"gateway-service/internal/items/config"
 	"log/slog"
 
 	"github.com/segmentio/kafka-go"
@@ -46,5 +47,42 @@ func (b *MsgBroker) publishMessage(ctx context.Context, topic string, body []byt
 	}
 
 	b.logger.Info("Message published", "topic", topic)
+	return nil
+}
+
+func CreateTopics(config *config.Config, logger *slog.Logger) error {
+	topics := []string{
+		"transaction_created",
+		"budget_updated",
+		"goal_progress_updated",
+		"notification_created",
+	}
+
+	conn, err := kafka.DialContext(context.Background(), "tcp", config.Kafka.Brokers)
+	if err != nil {
+		return err
+	}
+	defer conn.Close()
+
+	for _, topic := range topics {
+		partitions, err := conn.ReadPartitions(topic)
+		if err == nil && len(partitions) > 0 {
+			logger.Info("Topic already exists", "topic", topic)
+			continue
+		}
+
+		err = conn.CreateTopics(kafka.TopicConfig{
+			Topic:             topic,
+			NumPartitions:     1,
+			ReplicationFactor: 1,
+		})
+		if err != nil {
+			logger.Error("Failed to create topic", "topic", topic, "error", err.Error())
+			return err
+		}
+
+		logger.Info("Topic created successfully", "topic", topic)
+	}
+
 	return nil
 }

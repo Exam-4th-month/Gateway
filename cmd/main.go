@@ -5,6 +5,7 @@ import (
 	"log/slog"
 	"os"
 	"path/filepath"
+	"time"
 
 	casbin "github.com/casbin/casbin/v2"
 	"github.com/segmentio/kafka-go"
@@ -12,6 +13,9 @@ import (
 	"gateway-service/internal/items/config"
 	"gateway-service/internal/items/http/app"
 	"gateway-service/internal/items/http/handler"
+	"gateway-service/internal/items/msgbroker"
+	"gateway-service/internal/items/redisservice"
+	redisCl "gateway-service/internal/pkg/redis"
 )
 
 func main() {
@@ -36,7 +40,12 @@ func main() {
 		log.Fatal(err)
 	}
 
-	// time.Sleep(10 * time.Second)
+	redis, err := redisCl.NewRedisDB(config)
+	if err != nil {
+		logger.Error("Error connecting to Redis", slog.String("err", err.Error()))
+	}
+
+	time.Sleep(10 * time.Second)
 
 	writer := kafka.NewWriter(kafka.WriterConfig{
 		Brokers: []string{config.Kafka.Brokers},
@@ -44,7 +53,12 @@ func main() {
 	})
 	defer writer.Close()
 
-	handler := handler.New(logger, config, writer)
+	err = msgbroker.CreateTopics(config, logger)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	handler := handler.New(redisservice.New(redis, logger), logger, config, writer)
 
 	log.Fatal(app.Run(handler, logger, config, enforcer))
 }

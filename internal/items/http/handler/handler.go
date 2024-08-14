@@ -4,6 +4,7 @@ import (
 	"log/slog"
 
 	"gateway-service/internal/items/config"
+	"gateway-service/internal/items/redisservice"
 
 	"gateway-service/internal/items/http/handler/auth"
 	"gateway-service/internal/items/http/handler/budgeting"
@@ -17,11 +18,11 @@ type Handler struct {
 	BudgetingRepo *budgeting.BudgetingHandler
 }
 
-func New(logger *slog.Logger, config *config.Config, writer *kafka.Writer) *Handler {
+func New(redis *redisservice.RedisService, logger *slog.Logger, config *config.Config, writer *kafka.Writer) *Handler {
 	msgbroker := msgbroker.NewMsgBroker(writer, logger)
 
 	return &Handler{
 		AuthRepo:      auth.NewAuthHandler(logger, config),
-		BudgetingRepo: budgeting.NewBudgetingHandler(logger, msgbroker, config),
+		BudgetingRepo: budgeting.NewBudgetingHandler(redis, logger, msgbroker, config),
 	}
 }
