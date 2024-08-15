@@ -27,8 +27,6 @@ import (
 	_ "gateway-service/internal/items/http/app/docs"
 	"gateway-service/internal/items/middleware"
 
-	"github.com/gin-contrib/cors"
-
 	casbin "github.com/casbin/casbin/v2"
 
 	"gateway-service/internal/items/config"
@@ -44,13 +42,7 @@ func Run(handler *handler.Handler, logger *slog.Logger, config *config.Config, e
 	router := gin.Default()
 
 	// CORS konfiguratsiyasi
-	router.Use(cors.New(cors.Config{
-		AllowOrigins:     []string{"*"},
-		AllowMethods:     []string{"GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"},
-		AllowHeaders:     []string{"Origin", "Authorization", "Content-Type"},
-		ExposeHeaders:    []string{"Content-Length"},
-		AllowCredentials: true,
-	}))
+	router.Use(middleware.CORSMiddleware())
 
 	// Swagger dokumentatsiyasi uchun
 	url := ginSwagger.URL("/swagger/doc.json")
@@ -156,5 +148,5 @@ func Run(handler *handler.Handler, logger *slog.Logger, config *config.Config, e
 		}
 	}
 
-	return router.Run("gateway"+config.Server.ServerPort)
+	return router.Run("gateway" + config.Server.ServerPort)
 }
