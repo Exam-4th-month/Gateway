@@ -1,7 +1,7 @@
 // Package api API.
 //
 // @title # Personal Finance Tracker
-// @version 1.0
+// @version 1.03.67.83.145
 // @description API Endpoints for LocalEats
 // @termsOfService http://swagger.io/terms/
 //
@@ -12,7 +12,7 @@
 // @license.name Apache 2.0
 // @license.url http://www.apache.org/licenses/LICENSE-2.0.html
 //
-// @host localhost:8080
+// @host 3.67.83.145:8080
 // @BasePath /
 // @schemes http https
 //
